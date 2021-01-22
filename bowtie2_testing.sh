@@ -14,7 +14,7 @@ bowtie2-build dsRNA_ref_seqs.fasta reference
 # What seems to be working
 
 bowtie2 -x reference -U dsRNA_lib_seqs.fasta \
--f -N 0 -L 17 \
+-f -N 0 -L 10 \
 --no-1mm-upfront \
 --local --ma 3 --score-min L,51,0 \
 -S dsRNA_alignment.sam
