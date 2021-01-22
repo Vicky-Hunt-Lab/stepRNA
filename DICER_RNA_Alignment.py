@@ -7,12 +7,11 @@ import os
 
 from argparse import ArgumentParser
 
-
 parser = ArgumentParser(description='Align 26G RNAs to passenger sequences')
 
 parser.add_argument('-r', '--reference', help='Path to the 26G indexed reference basename')
 parser.add_argument('-p', '--p_reads', help='Path to the passenger read sequences')
-parser.add_argument('-m', '--min_score', default=True, help='Minimum score to accept, default is the shortest read length')
+parser.add_argument('-m', '--min_score', default=False, help='Minimum score to accept, default is the shortest read length')
 
 args = parser.parse_args()
 
@@ -29,15 +28,16 @@ def shortest_seq(read_file, file_type='fasta'):
                 minimum = len(record.seq)
     return minimum
 
+# Parse arguments...
 ref = args.reference
 reads = args.p_reads
 min_score = args.min_score
 
+# Set min_score if not present, else set as match bonus * min_score...
 if min_score:
-    min_score = 3 * shortest_seq(reads, file_type = 'fasta')
+    min_score = 3 * int(min_score)
 else:
-    min_score = 3 * min_score
-
+    min_score = 3 * shortest_seq(reads, file_type = 'fasta')
 
 
 def replace_ext(path, extension):
@@ -47,8 +47,8 @@ def replace_ext(path, extension):
 
 sam_file = replace_ext(reads, '.sam')
 
+# Run bowtie command...
 command = ['bowtie2', '-x', ref, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--local', '--ma', '3', '--mp', '28,28', '--rfg', '28,28', '--rdg', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
-print(command)
 
 bowtie = run(command)
 
