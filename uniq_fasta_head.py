@@ -25,3 +25,4 @@ with open(fasta_in) as fin, open(fasta_out, 'w') as fout:
         record.description = ''
         SeqIO.write(record, fout, 'fasta')
 
+run(['mv', fasta_out, fasta_in])
