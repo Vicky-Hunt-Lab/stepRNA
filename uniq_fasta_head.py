@@ -21,7 +21,7 @@ fasta_out = os.path.splitext(fasta_in)[0] + '_corrected' + os.path.splitext(fast
 with open(fasta_in) as fin, open(fasta_out, 'w') as fout:
     records = SeqIO.parse(fin, 'fasta')
     for x, record in enumerate(records):
-        record.id = name + '_{}'.format(x) 
+        record.id = name + '_{}'.format(x + 1) 
         record.description = ''
         SeqIO.write(record, fout, 'fasta')
 
