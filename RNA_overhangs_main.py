@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from subprocess import run
+from subprocess import run, PIPE
 import os
 import glob
 
@@ -28,14 +28,13 @@ if args.conv_headers:
         run(['uniq_fasta_head.py', '-f', fin])
 
 # Reverse the direction of the passenger sequences... (check with Becky)
-
 def replace_ext(path, extension):
     ext_path = os.path.basename(path) 
     ext_path = os.path.splitext(ext_path)[0]
     return ext_path + extension
 
-run(['reverse_seq.py','-r', reads])
-reads = replace_ext(reads, '_reversed.fa')
+#run(['reverse_seq.py','-r', reads])
+#reads = replace_ext(reads, '_reversed.fa')
 
 # Search for indexed files, if not present then generate them...
 def bowtie_indexed(reference):
@@ -68,3 +67,19 @@ else:
 
 run(command)
 
+# Convert sam to bam...
+
+samfile = replace_ext(reads, '.sam')
+bamfile = replace_ext(reads, '.bam')
+
+with open(bamfile, 'w') as fout:
+    command = ['samtools', 'view', '-bS', samfile]
+    run(command, stdout=fout)
+    os.remove(samfile)
+
+# Index bamfile
+bamsort = replace_ext(bamfile, '.sort.bam')
+print(bamfile)
+print(bamsort)
+run(['samtools', 'sort', bamfile, '-o', bamsort])
+run(['samtools', 'index', bamsort])
