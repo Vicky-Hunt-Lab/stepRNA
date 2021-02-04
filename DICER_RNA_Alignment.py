@@ -122,6 +122,8 @@ def left_overhang(sorted_bam, line, ref_positions):
     '''Get the length of the left overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang'''
     ref_positions = line.get_reference_positions(full_length=True) 
     if ref_positions[0] == 0:
+        print(ref_positions)
+        print(line.query_alignment_length)
         return 0, 'left_exact'
     elif ref_positions[0] == None:
         if line.reference_start != 0:
@@ -146,7 +148,12 @@ def right_overhang(sorted_bam, line, ref_positions):
         #If reference_position[-1] < ref_length
         return ref_positions[-1] - (ref_length - 1), 'right_reference'
 
-def make_csv(dics, csv_name='overhang_summary.csv'):
+def write_to_bam(line, left_type, right_type):
+    '''Take a pysam.AlignmentFile record and write it to a file'''
+    with open(left_type + '_' + right_type + '.bam', 'a+') as bam_out:
+        bam_out.write(line.to_string() + '\n')
+
+def make_csv(dics, csv_name, headers):
     '''Make a csv continaing the overhang information
     dics=[right_dic, left_dic] format'''
     keys = set()
@@ -157,16 +164,33 @@ def make_csv(dics, csv_name='overhang_summary.csv'):
     keys.sort()
     with open(csv_name, 'w') as csv_out:
         writer = csv.writer(csv_out, delimiter=',')
-        writer.writerow(['OH', 'Left', 'Right'])
-        print('OH\tLeft\tRight')
+        writer.writerow(headers)
+        print('\t'.join(headers))
         for key in keys:
+            if dics[0][key] == None:
+                dics[0][key] = 0
+            if dics[1][key] == None:
+                dics[1][key] = 0
             writer.writerow([key, dics[1].get(key), dics[0].get(key)])
             print('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
 
+def make_type_csv(dic, csv_name, headers):
+    with open(csv_name, 'w') as csv_out:
+        writer = csv.writer(csv_out, delimiter = ',')
+        writer.writerow(headers)
+        print('\t'.join(headers))
+        for key in dic:
+            writer.writerow([key, dic[key]])
+            print('{}\t{}'.format(key, dic[key]))
+
 def print_hist(density_list, keys):
     for item in range(len(density_list)):
-        length = int(density_list[item]) * '.'
-        print('{}\t| {}'.format(keys[item], length))
+        try:
+            length = int(density_list[item]) * '.'
+            print('{}\t| {}'.format(keys[item], length))
+        except ValueError:
+            print('{}\t{}'.format(keys[item], ''))
+
 #Command to run...
 # Parse arguments...
 ref = args.reference
@@ -197,7 +221,8 @@ else:
 # Run bowtie command...
 sam_file = replace_ext(reads, '.sam')
 command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--local', '--ma', '3', '--mp', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
-print('Aligning reads...')
+print('Aligning reads with command:\n{}'.format(' '.join(command)))
+
 bowtie = run(command)
 #Convert sam to bam...
 sorted_bam = sam_to_bam(sam_file)
@@ -207,6 +232,7 @@ bam_in = pysam.AlignmentFile(sorted_bam, 'rb')
 right_dic = defaultdict(lambda:0)
 left_dic = defaultdict(lambda:0)
 type_dic = defaultdict(lambda:0)
+
 for line in bam_in:
     if line.cigarstring != None:
         if ('D' or 'I') not in line.cigarstring:
@@ -217,19 +243,15 @@ for line in bam_in:
                 right_dic[right] += 1
                 left_dic[left] += 1
                 type_dic[left_type + '_' + right_type] += 1
+                write_to_bam(line, left_type, right_type)
             except Exception:
                 continue
 
-print(type_dic)
-    
-#Put those that are counted into a new BAM file...
-def line_to_file(left_type, right_type, line):
-    '''Save the BAM file line to the corresponding file according to left and right overhang types'''
-    pass
-
 #Put overhangs infomation into a csv and print to terminal...
-make_csv([right_dic, left_dic])
-
+make_csv([right_dic, left_dic], 'overhang_summary.csv', ['OH','Left','Right'])
+print()
+make_type_csv(type_dic, 'overhang_type.csv', ['OH_type', 'count'])
+print()
 with open('overhang_summary.csv') as summary:
     left_dens = []
     right_dens = []
