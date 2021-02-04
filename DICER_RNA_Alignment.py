@@ -5,6 +5,8 @@ import numpy as np
 from subprocess import run, PIPE
 import os
 import sys
+from collections import defaultdict
+import csv
 
 #Modules that need to be installed
 try:
@@ -116,6 +118,55 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
         ref_records = SeqIO.parse(refs, read_type)
     return rm_ref
 
+def left_overhang(sorted_bam, line, ref_positions):
+    '''Get the length of the left overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang'''
+    ref_positions = line.get_reference_positions(full_length=True) 
+    if ref_positions[0] == 0:
+        return 0, 'left_exact'
+    elif ref_positions[0] == None:
+        if line.reference_start != 0:
+            raise Exception
+        else:
+            return line.query_alignment_start, 'left_query'
+    else:
+        #If reference_position[0] > 0
+        return -ref_positions[0], 'left_reference'
+
+def right_overhang(sorted_bam, line, ref_positions):
+    '''Get the length of the right overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang'''
+    ref_length = sorted_bam.lengths[sorted_bam.get_tid(line.reference_name)]
+    if ref_positions[-1] == ref_length - 1:
+        return 0, 'right_exact'
+    elif ref_positions[-1] == None:
+        if line.reference_end != ref_length:
+           raise Exception 
+        else:
+            return ref_length - line.query_alignment_end, 'right_query'
+    else:
+        #If reference_position[-1] < ref_length
+        return ref_positions[-1] - (ref_length - 1), 'right_reference'
+
+def make_csv(dics, csv_name='overhang_summary.csv'):
+    '''Make a csv continaing the overhang information
+    dics=[right_dic, left_dic] format'''
+    keys = set()
+    for dic in dics:
+        for key in dic:
+            keys.add(key)
+    keys = list(keys)
+    keys.sort()
+    with open(csv_name, 'w') as csv_out:
+        writer = csv.writer(csv_out, delimiter=',')
+        writer.writerow(['OH', 'Left', 'Right'])
+        print('OH\tLeft\tRight')
+        for key in keys:
+            writer.writerow([key, dics[1].get(key), dics[0].get(key)])
+            print('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
+
+def print_hist(density_list, keys):
+    for item in range(len(density_list)):
+        length = int(density_list[item]) * '.'
+        print('{}\t| {}'.format(keys[item], length))
 #Command to run...
 # Parse arguments...
 ref = args.reference
@@ -132,9 +183,10 @@ if args.make_unique:
     ref = make_unique(reference)
 
 #Build a reference (suppress verbosity)...
-command = 'bowtie2-build {} {}'.format(reads, ref)
+ref_base = os.path.splitext(ref)[0]
+command = 'bowtie2-build {} {}'.format(ref, ref_base)
 command = command.split()
-run(command, stderr=PIPE)
+run(command, stdout=PIPE)
 
 # Set min_score if not present, else set as match bonus * min_score...
 if min_score != -1:
@@ -144,18 +196,65 @@ else:
 
 # Run bowtie command...
 sam_file = replace_ext(reads, '.sam')
-command = ['bowtie2', '-x', ref, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--local', '--ma', '3', '--mp', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
+command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--local', '--ma', '3', '--mp', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
+print('Aligning reads...')
 bowtie = run(command)
 #Convert sam to bam...
 sorted_bam = sam_to_bam(sam_file)
 
 #Count overhangs...
+bam_in = pysam.AlignmentFile(sorted_bam, 'rb')
+right_dic = defaultdict(lambda:0)
+left_dic = defaultdict(lambda:0)
+type_dic = defaultdict(lambda:0)
+for line in bam_in:
+    if line.cigarstring != None:
+        if ('D' or 'I') not in line.cigarstring:
+            ref_pos = line.get_reference_positions(full_length = True)
+            try:
+                right, right_type = right_overhang(bam_in, line, ref_pos)
+                left, left_type = left_overhang(bam_in, line, ref_pos)
+                right_dic[right] += 1
+                left_dic[left] += 1
+                type_dic[left_type + '_' + right_type] += 1
+            except Exception:
+                continue
 
+print(type_dic)
+    
 #Put those that are counted into a new BAM file...
+def line_to_file(left_type, right_type, line):
+    '''Save the BAM file line to the corresponding file according to left and right overhang types'''
+    pass
 
 #Put overhangs infomation into a csv and print to terminal...
+make_csv([right_dic, left_dic])
 
+with open('overhang_summary.csv') as summary:
+    left_dens = []
+    right_dens = []
+    left_tot = 0
+    right_tot = 0
+    keys = []
+    csv_reader = csv.reader(summary, delimiter=',')
+    head = next(csv_reader)
+    for line in csv_reader:
+        keys.append(line[0])
+        left_dens.append(int(line[1]))
+        left_tot += int(line[1])
+        right_dens.append(int(line[2]))
+        right_tot += int(line[2])
+
+for key in range(len(keys)):
+    left_dens[key] = 100 * left_dens[key] / left_tot
+    right_dens[key] = 100 * right_dens[key] / right_tot
+    
 #Print histogram of overhangs to terminal...
+print('Left Handside Overhang Histogram')
+print_hist(left_dens, keys)
+
+print('Right Handside Overhang Histogram')
+print_hist(right_dens, keys)
 
 #Summarise type of referernce:read. For example:
 # 9 possibilities...
