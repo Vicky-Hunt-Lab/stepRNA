@@ -35,15 +35,19 @@ parser.add_argument('-u', '--make_unique', action='store_true', help='Make FASTA
 args = parser.parse_args()
 
 #Functions to use...
-def shortest_seq(read_file, file_type='fasta'):
+def mini_maxi(read_file, file_type='fasta'):
     '''Find the shortest length sequene from a fasta or fastq file'''
     with open(read_file, 'rU') as handle:
         parser = SeqIO.parse(handle, 'fasta')
         minimum = np.inf
+        maximum = 0
         for record in parser:
-            if len(record.seq) < minimum:
+            length = len(record.seq)
+            if length < minimum:
                 minimum = len(record.seq)
-    return minimum
+            if length > maximum:
+                maximum = len(record.seq)
+    return minimum, maximum
 
 def replace_ext(path, extension):
     '''Replace the file extension with one of choice'''
@@ -223,14 +227,17 @@ command = command.split()
 run(command, stdout=PIPE)
 
 # Set min_score if not present, else set as match bonus * min_score...
+minimum, maximum = mini_maxi(reads, file_type = 'fasta')
+
 if min_score != -1:
     min_score = 3 * min_score
 else:
-    min_score = 3 * shortest_seq(reads, file_type = 'fasta')
+    min_score = 3 * minimum 
+
 
 # Run bowtie command...
 sam_file = replace_ext(reads, '.sam')
-command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--nofw','--local', '--ma', '3', '--mp', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
+command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--nofw','--local', '--ma', '3', '--mp', '{},{}'.format(maximum, maximum), '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
 print('Aligning reads with command:\n{}'.format(' '.join(command)))
 
 bowtie = run(command)
