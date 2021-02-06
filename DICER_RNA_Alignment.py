@@ -230,7 +230,7 @@ bam_in = pysam.AlignmentFile(sorted_bam, 'rb')
 right_dic = defaultdict(lambda:0)
 left_dic = defaultdict(lambda:0)
 type_dic = defaultdict(lambda:0)
-length_dic = defaultdict(lambda:0)
+read_len_dic = defaultdict(lambda:0)
 
 for line in bam_in:
     if line.cigarstring != None:
@@ -239,9 +239,11 @@ for line in bam_in:
             try:
                 right, right_type = right_overhang(bam_in, line, ref_pos)
                 left, left_type = left_overhang(bam_in, line, ref_pos)
+                # Create dictionaries to sort information...
                 right_dic[right] += 1
                 left_dic[left] += 1
                 type_dic[left_type + '_' + right_type] += 1
+                read_len_dic[line.query_length] += 1
                 write_to_bam(line, left_type, right_type)
             except Exception:
                 continue
@@ -265,6 +267,8 @@ with open('overhang_summary.csv') as summary:
         left_tot += int(line[1])
         right_dens.append(int(line[2]))
         right_tot += int(line[2])
+
+make_type_csv(read_len_dic, 'read_lengths.csv', ['Read_length', 'count'])
 
 for key in range(len(keys)):
     left_dens[key] = 100 * left_dens[key] / left_tot
