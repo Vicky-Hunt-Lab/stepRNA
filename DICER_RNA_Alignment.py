@@ -122,8 +122,6 @@ def left_overhang(sorted_bam, line, ref_positions):
     '''Get the length of the left overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang'''
     ref_positions = line.get_reference_positions(full_length=True) 
     if ref_positions[0] == 0:
-        print(ref_positions)
-        print(line.query_alignment_length)
         return 0, 'left_exact'
     elif ref_positions[0] == None:
         if line.reference_start != 0:
@@ -220,7 +218,7 @@ else:
 
 # Run bowtie command...
 sam_file = replace_ext(reads, '.sam')
-command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--local', '--ma', '3', '--mp', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
+command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--nofw','--local', '--ma', '3', '--mp', '28,28', '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
 print('Aligning reads with command:\n{}'.format(' '.join(command)))
 
 bowtie = run(command)
@@ -232,6 +230,7 @@ bam_in = pysam.AlignmentFile(sorted_bam, 'rb')
 right_dic = defaultdict(lambda:0)
 left_dic = defaultdict(lambda:0)
 type_dic = defaultdict(lambda:0)
+length_dic = defaultdict(lambda:0)
 
 for line in bam_in:
     if line.cigarstring != None:
