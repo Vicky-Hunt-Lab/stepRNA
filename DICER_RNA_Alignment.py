@@ -172,12 +172,20 @@ def make_csv(dics, csv_name, headers):
             writer.writerow([key, dics[1].get(key), dics[0].get(key)])
             print('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
 
-def make_type_csv(dic, csv_name, headers):
+def make_type_csv(dic, csv_name, headers, sort=False):
+    if sort:
+        keys = set()
+        for key in dic:
+            keys.add(key)
+        keys = list(keys)
+        keys.sort()
+    else:
+        keys=dic.keys()
     with open(csv_name, 'w') as csv_out:
         writer = csv.writer(csv_out, delimiter = ',')
         writer.writerow(headers)
         print('\t'.join(headers))
-        for key in dic:
+        for key in keys:
             writer.writerow([key, dic[key]])
             print('{}\t{}'.format(key, dic[key]))
 
@@ -231,6 +239,7 @@ right_dic = defaultdict(lambda:0)
 left_dic = defaultdict(lambda:0)
 type_dic = defaultdict(lambda:0)
 read_len_dic = defaultdict(lambda:0)
+refs_read_dic = defaultdict(lambda:0)
 
 for line in bam_in:
     if line.cigarstring != None:
@@ -240,18 +249,20 @@ for line in bam_in:
                 right, right_type = right_overhang(bam_in, line, ref_pos)
                 left, left_type = left_overhang(bam_in, line, ref_pos)
                 # Create dictionaries to sort information...
-                right_dic[right] += 1
-                left_dic[left] += 1
-                type_dic[left_type + '_' + right_type] += 1
-                read_len_dic[line.query_length] += 1
-                write_to_bam(line, left_type, right_type)
+                right_dic[right] += 1 # right overhang count
+                left_dic[left] += 1 # left overhang count
+                type_dic[left_type + '_' + right_type] += 1 # type of overhang count
+                read_len_dic[line.query_length] += 1 # read length count
+                refs_read_dic[line.reference_name) += 1 # number of reads algining to reference
+                write_to_bam(line, left_type, right_type) # separate reads to 'bam' files
             except Exception:
                 continue
 
 #Put overhangs infomation into a csv and print to terminal...
 make_csv([right_dic, left_dic], 'overhang_summary.csv', ['OH','Left','Right'])
-print()
 make_type_csv(type_dic, 'overhang_type.csv', ['OH_type', 'count'])
+make_type_csv(read_len_dic, 'read_lengths.csv', ['Read_length', 'count'], sort=True)
+make_type_csv(refs_read_dic, 'referece_numbers.csv', ['Reference', 'count'])
 print()
 with open('overhang_summary.csv') as summary:
     left_dens = []
@@ -268,7 +279,6 @@ with open('overhang_summary.csv') as summary:
         right_dens.append(int(line[2]))
         right_tot += int(line[2])
 
-make_type_csv(read_len_dic, 'read_lengths.csv', ['Read_length', 'count'])
 
 for key in range(len(keys)):
     left_dens[key] = 100 * left_dens[key] / left_tot
