@@ -27,7 +27,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser(description='Align an reference RNA file to passenger sequences\n Reference RNA file will be automatically referenced and unique headers will be made if required')
 
 parser.add_argument('-r', '--reference', help='Path to the 26G indexed reference basename')
-parser.add_argument('-p', '--p_reads', help='Path to the passenger read sequences')
+parser.add_argument('-a', '--reads', help='Path to the passenger read sequences')
 parser.add_argument('-n', '--name',  help='Prefix for the output files')
 parser.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files')
 parser.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept, default is the shortest read length')
