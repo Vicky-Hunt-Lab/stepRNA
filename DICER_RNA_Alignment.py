@@ -151,7 +151,7 @@ def write_to_bam(line, left_type, right_type):
     with open(left_type + '_' + right_type + '.bam', 'a+') as bam_out:
         bam_out.write(line.to_string() + '\n')
 
-def make_csv(dics, csv_name, headers):
+def make_csv(dics, csv_name, headers, show=True):
     '''Make a csv continaing the overhang information
     dics=[right_dic, left_dic] format'''
     keys = set()
@@ -163,16 +163,18 @@ def make_csv(dics, csv_name, headers):
     with open(csv_name, 'w') as csv_out:
         writer = csv.writer(csv_out, delimiter=',')
         writer.writerow(headers)
-        print('\t'.join(headers))
+        if show:
+            print('\t'.join(headers))
         for key in keys:
             if dics[0][key] == None:
                 dics[0][key] = 0
             if dics[1][key] == None:
                 dics[1][key] = 0
             writer.writerow([key, dics[1].get(key), dics[0].get(key)])
-            print('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
+            if show:
+                print('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
 
-def make_type_csv(dic, csv_name, headers, sort=False):
+def make_type_csv(dic, csv_name, headers, show=True, sort=False):
     if sort:
         keys = set()
         for key in dic:
@@ -184,10 +186,12 @@ def make_type_csv(dic, csv_name, headers, sort=False):
     with open(csv_name, 'w') as csv_out:
         writer = csv.writer(csv_out, delimiter = ',')
         writer.writerow(headers)
-        print('\t'.join(headers))
+        if show:
+            print('\t'.join(headers))
         for key in keys:
             writer.writerow([key, dic[key]])
-            print('{}\t{}'.format(key, dic[key]))
+            if show:
+                print('{}\t{}'.format(key, dic[key]))
 
 def print_hist(density_list, keys):
     for item in range(len(density_list)):
@@ -240,6 +244,9 @@ left_dic = defaultdict(lambda:0)
 type_dic = defaultdict(lambda:0)
 read_len_dic = defaultdict(lambda:0)
 refs_read_dic = defaultdict(lambda:0)
+#Uncomment if want all reference sequences
+#for name in bam_in.references:
+#    refs_read_dic[name] = 0
 
 for line in bam_in:
     if line.cigarstring != None:
@@ -253,16 +260,19 @@ for line in bam_in:
                 left_dic[left] += 1 # left overhang count
                 type_dic[left_type + '_' + right_type] += 1 # type of overhang count
                 read_len_dic[line.query_length] += 1 # read length count
-                refs_read_dic[line.reference_name) += 1 # number of reads algining to reference
+                refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
                 write_to_bam(line, left_type, right_type) # separate reads to 'bam' files
             except Exception:
                 continue
 
 #Put overhangs infomation into a csv and print to terminal...
+print('\n## Overhang counts ##')
 make_csv([right_dic, left_dic], 'overhang_summary.csv', ['OH','Left','Right'])
+print('\n## Overhang types ##')
 make_type_csv(type_dic, 'overhang_type.csv', ['OH_type', 'count'])
+print('\n## Read lengths ##')
 make_type_csv(read_len_dic, 'read_lengths.csv', ['Read_length', 'count'], sort=True)
-make_type_csv(refs_read_dic, 'referece_numbers.csv', ['Reference', 'count'])
+make_type_csv(refs_read_dic, 'referece_numbers.csv', ['Reference', 'count'], show=False)
 print()
 with open('overhang_summary.csv') as summary:
     left_dens = []
