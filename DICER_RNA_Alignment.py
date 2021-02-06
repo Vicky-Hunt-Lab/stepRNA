@@ -13,13 +13,13 @@ try:
     from Bio import SeqIO
 except ImportError:
     print('Error: Biopython not found, can be installed with\npip3 install biopython', file=sys.stderr)
-    exit()
+    sys.exit(1)
 
 try:
     import pysam
 except ImportError:
     print('Error: Pysam not found, can be installed with\npip3 install pysam', file=sys.stderr)
-    exit()
+    sys.exit(1)
 
 #Set-up arguments...
 from argparse import ArgumentParser
@@ -28,13 +28,29 @@ parser = ArgumentParser(description='Align an reference RNA file to passenger se
 
 parser.add_argument('-r', '--reference', help='Path to the 26G indexed reference basename')
 parser.add_argument('-p', '--p_reads', help='Path to the passenger read sequences')
+parser.add_argument('-n', '--name',  help='Prefix for the output files')
+parser.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files')
 parser.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept, default is the shortest read length')
-parser.add_argument('-d', '--remove_exact', action='store_true', help='Remove exact read matches to the reference sequence')
+parser.add_argument('-e', '--remove_exact', action='store_true', help='Remove exact read matches to the reference sequence')
 parser.add_argument('-u', '--make_unique', action='store_true', help='Make FASTA headers unique in reference and reads i.e. >Read_1 >Read_2')
 
 args = parser.parse_args()
 
 #Functions to use...
+def check_dir(path):
+    '''Check whether the directory specified is present. Create one if not.'''
+    if os.path.isdir(path):
+        print('Files being outputted to: {}'.format(os.path.abspath(path)))
+    else:
+        try:
+            os.mkdir(os.path.relpath(path))
+            print('Created directory: {}'.format(os.path.abspath(path)))
+        except FileNotFoundError:
+            print('Something went wrong when making the directory\n \
+Are you sure it is a valid path entered?')
+            sys.exit(1)
+    return os.path.abspath(path)
+            
 def mini_maxi(read_file, file_type='fasta'):
     '''Find the shortest length sequene from a fasta or fastq file'''
     with open(read_file, 'rU') as handle:
@@ -51,8 +67,7 @@ def mini_maxi(read_file, file_type='fasta'):
 
 def replace_ext(path, extension):
     '''Replace the file extension with one of choice'''
-    ext_path = os.path.basename(path) 
-    ext_path = os.path.splitext(ext_path)[0]
+    ext_path = os.path.splitext(path)[0]
     return ext_path + extension
 
 def sam_to_bam(sam_file):
@@ -126,33 +141,33 @@ def left_overhang(sorted_bam, line, ref_positions):
     '''Get the length of the left overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang'''
     ref_positions = line.get_reference_positions(full_length=True) 
     if ref_positions[0] == 0:
-        return 0, 'left_exact'
+        return 0, 'LE'
     elif ref_positions[0] == None:
         if line.reference_start != 0:
             raise Exception
         else:
-            return line.query_alignment_start, 'left_query'
+            return line.query_alignment_start, 'LQ'
     else:
         #If reference_position[0] > 0
-        return -ref_positions[0], 'left_reference'
+        return -ref_positions[0], 'LR'
 
 def right_overhang(sorted_bam, line, ref_positions):
     '''Get the length of the right overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang'''
     ref_length = sorted_bam.lengths[sorted_bam.get_tid(line.reference_name)]
     if ref_positions[-1] == ref_length - 1:
-        return 0, 'right_exact'
+        return 0, 'RE'
     elif ref_positions[-1] == None:
         if line.reference_end != ref_length:
            raise Exception 
         else:
-            return ref_length - line.query_alignment_end, 'right_query'
+            return ref_length - line.query_alignment_end, 'RQ'
     else:
         #If reference_position[-1] < ref_length
-        return ref_positions[-1] - (ref_length - 1), 'right_reference'
+        return ref_positions[-1] - (ref_length - 1), 'RR'
 
-def write_to_bam(line, left_type, right_type):
+def write_to_bam(line, left_type, right_type, prefix):
     '''Take a pysam.AlignmentFile record and write it to a file'''
-    with open(left_type + '_' + right_type + '.bam', 'a+') as bam_out:
+    with open(prefix + '_' + left_type + '_' + right_type + '.bam', 'a+') as bam_out:
         bam_out.write(line.to_string() + '\n')
 
 def make_csv(dics, csv_name, headers, show=True):
@@ -210,6 +225,14 @@ def print_hist(density_list, keys):
 ref = args.reference
 reads = args.p_reads
 min_score = args.min_score
+outdir = check_dir(args.directory)
+if args.name is None:
+    filename = reads 
+else:
+    filename = args.name
+
+#Join together output directory and filename to make a prefix...
+prefix = os.path.join(outdir, filename)
 
 #Remove exact matches to reference if set...
 if args.remove_exact:
@@ -236,9 +259,8 @@ else:
 
 
 # Run bowtie command...
-sam_file = replace_ext(reads, '.sam')
+sam_file = replace_ext(prefix, '.sam')
 command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--nofw','--local', '--ma', '3', '--mp', '{},{}'.format(maximum, maximum), '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
-print('Aligning reads with command:\n{}'.format(' '.join(command)))
 
 bowtie = run(command)
 #Convert sam to bam...
@@ -251,9 +273,8 @@ left_dic = defaultdict(lambda:0)
 type_dic = defaultdict(lambda:0)
 read_len_dic = defaultdict(lambda:0)
 refs_read_dic = defaultdict(lambda:0)
-#Uncomment if want all reference sequences
-#for name in bam_in.references:
-#    refs_read_dic[name] = 0
+for name in bam_in.references:
+    refs_read_dic[name] = 0
 
 for line in bam_in:
     if line.cigarstring != None:
@@ -268,18 +289,18 @@ for line in bam_in:
                 type_dic[left_type + '_' + right_type] += 1 # type of overhang count
                 read_len_dic[line.query_length] += 1 # read length count
                 refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
-                write_to_bam(line, left_type, right_type) # separate reads to 'bam' files
+                write_to_bam(line, left_type, right_type, prefix=prefix) # separate reads to 'bam' files
             except Exception:
                 continue
 
 #Put overhangs infomation into a csv and print to terminal...
 print('\n## Overhang counts ##')
-make_csv([right_dic, left_dic], 'overhang_summary.csv', ['OH','Left','Right'])
+make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['OH','Left','Right'])
 print('\n## Overhang types ##')
-make_type_csv(type_dic, 'overhang_type.csv', ['OH_type', 'count'])
+make_type_csv(type_dic, prefix + '_type.csv', ['OH_type', 'count'])
 print('\n## Read lengths ##')
-make_type_csv(read_len_dic, 'read_lengths.csv', ['Read_length', 'count'], sort=True)
-make_type_csv(refs_read_dic, 'referece_numbers.csv', ['Reference', 'count'], show=False)
+make_type_csv(read_len_dic, prefix + '_read_len.csv', ['Read_length', 'count'], sort=True)
+make_type_csv(refs_read_dic, prefix + '_ref_hits.csv', ['Reference', 'count'], show=False)
 print()
 with open('overhang_summary.csv') as summary:
     left_dens = []
