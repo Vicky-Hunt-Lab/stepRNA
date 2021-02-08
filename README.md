@@ -11,7 +11,7 @@ Then either:
 - Make a symbolic link for stepRNA.py to your bin directory
 ```ln FULL_PATH_TO_stepRNA.py FULL_PATH_TO_BIN```
 - Copy the stepRNA into your bin directory
-```cp stepRNA.py FULL_PATH_TO_BIN
+```cp stepRNA.py FULL_PATH_TO_BIN```
 - Direct PATH to the directory with stepRNA in it
 ```export PATH=$PATH:FULL_PATH_TO_GitHubRepo```
 
