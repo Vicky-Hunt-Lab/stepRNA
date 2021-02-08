@@ -4,7 +4,16 @@ stepRNA is a RNA-seq read processor, based on bowtie2, that will align query rea
 
 #### Installation
 
-(INCLUDE ONCE I HAVE SORTED)
+Download the GitHub repository then make the file executable with:
+```chmod +x stepRNA.py```
+
+Then either:
+- Make a symbolic link for stepRNA.py to your bin directory
+```ln FULL_PATH_TO_stepRNA.py FULL_PATH_TO_BIN```
+- Copy the stepRNA into your bin directory
+```cp stepRNA.py FULL_PATH_TO_BIN
+- Direct PATH to the directory with stepRNA in it
+```export PATH=$PATH:FULL_PATH_TO_GitHubRepo```
 
 #### Use:
 See the documentation for a detailed description on how to use stepRNA.
@@ -14,7 +23,7 @@ The quickest way to use stepRNA:
  
 This will align the reads to the reference sequences and output into the current diretory using the READS filename as the prefix. The following should be met:
 - **REFERENCE** and **QUERY** must have unique FASTA headers (if not use ```-u```)
-- If **REFERENCE** have been extracted from **QUERY** then it is advised to remove the exact matches from the QUERY (use ```-e```) - ***THIS TAKES A LONG TIME!***
+- If **REFERENCE** have been extracted from **QUERY** then it is advised to remove the exact matches from the QUERY (use ```-e```) - ***This takes a long time!***
 
 Helpful options:
 - ```--name``` can be used to customise the prefix name
