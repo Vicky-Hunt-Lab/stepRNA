@@ -241,7 +241,7 @@ if args.remove_exact:
 #Make unique headers if set...
 if args.make_unique:
     reads = make_unique(reads)
-    ref = make_unique(reference)
+    ref = make_unique(ref)
 
 #Build a reference (suppress verbosity)...
 ref_base = os.path.splitext(ref)[0]
