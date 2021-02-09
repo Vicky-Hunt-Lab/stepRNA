@@ -27,7 +27,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser(description='Align an reference RNA file to passenger sequences\n Reference RNA file will be automatically referenced and unique headers will be made if required')
 
 parser.add_argument('-r', '--reference', help='Path to the 26G indexed reference basename')
-parser.add_argument('-a', '--reads', help='Path to the passenger read sequences')
+parser.add_argument('-q', '--reads', help='Path to the passenger read sequences')
 parser.add_argument('-n', '--name',  help='Prefix for the output files')
 parser.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files')
 parser.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept, default is the shortest read length')
@@ -223,7 +223,7 @@ def print_hist(density_list, keys):
 #Command to run...
 # Parse arguments...
 ref = args.reference
-reads = args.p_reads
+reads = args.reads
 min_score = args.min_score
 outdir = check_dir(args.directory)
 if args.name is None:
@@ -302,7 +302,7 @@ print('\n## Read lengths ##')
 make_type_csv(read_len_dic, prefix + '_read_len.csv', ['Read_length', 'count'], sort=True)
 make_type_csv(refs_read_dic, prefix + '_ref_hits.csv', ['Reference', 'count'], show=False)
 print()
-with open('overhang_summary.csv') as summary:
+with open(prefix + '_overhang_summary.csv') as summary:
     left_dens = []
     right_dens = []
     left_tot = 0
@@ -328,8 +328,3 @@ print_hist(left_dens, keys)
 
 print('Right Handside Overhang Histogram')
 print_hist(right_dens, keys)
-
-#Summarise type of referernce:read. For example:
-# 9 possibilities...
-# ------------
-#   -------     Is one 'type'
