@@ -1,5 +1,17 @@
 #General functions to use
 
+#Python default modules
+import numpy as np  
+import os.path
+import sys
+
+try:
+    from Bio import SeqIO
+except ImportError:
+    print('Error: Biopython not found, can be installed with\npip3 install biopython', file=sys.stderr)
+    sys.exit(1)
+
+
 def check_dir(path):
     '''Check whether the directory specified is present. Create one if not.'''
     if os.path.isdir(path):

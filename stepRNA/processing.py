@@ -1,5 +1,15 @@
 # File processing functions
 
+# Python core modules
+import os
+import sys
+from subprocess import run, PIPE
+
+try:
+    import pysam
+except ImportError:
+    print('Error: Pysam not found, can be installed with\npip3 install pysam', file=sys.stderr)
+    sys.exit(1)
 
 def sam_to_bam(sam_file):
     '''Convert the sam file output to a sorted bam
@@ -27,7 +37,16 @@ def sam_to_bam(sam_file):
     return sorted_bam
 
 def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
-    '''Make unqiue file names for each file in a FASTA/Q file'''
+    '''Make unqiue file names for each file in a FASTA/Q file.
+    
+    sqe_file [STR] - path to the Fasta/Fastq file
+    filetype [STR] - specify whether "fasta" or fastq"; default: "fasta"
+    name [STR] - prefix for the header. Default: "Read"
+    keep_ori [True/False] - keep the original file
+    
+    Will output the new file into the input file directory.
+
+    Returns: New filepath string'''
     temp_file = replace_ext(seq_file, '_corrected.fasta')
     with open(temp_file, 'w') as temp:
         for x, record in enumerate(SeqIO.parse(seq_file, filetype)):
@@ -42,7 +61,14 @@ def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
 
 def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
     '''Search through the reference genome and reads and remove any exact matches
-    Saves a new file named BASE_rmref.fasta'''
+    
+    refs [STR] - path to the reference seqeunces
+    reads [STR] - path to the read seqeunces
+    ref/read_type [STR] - specify whether "fasta" or "fastq" for the reference or read files
+
+    Saves a new file named READ_BASE_rmref.fasta
+    
+    Returns: New filepath string'''
     rm_ref = replace_ext(reads, '_rmref.fasta')
     print('Writing to {}'.format(rm_ref))
     fout = open(rm_ref, 'w')
