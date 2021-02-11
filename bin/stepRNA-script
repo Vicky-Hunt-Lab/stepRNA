@@ -88,6 +88,8 @@ run(command, stdout=PIPE)
 
 # Set min_score if not present, else set as match bonus * min_score...
 minimum, maximum = mini_maxi(reads, file_type = 'fasta')
+print('Miniumum sequence length in {}: {}'.format(os.basename(reads), minimum))
+print('Maxiumum sequence length in {}: {}'.format(os.basename(reads), maximum))
 
 if min_score != -1:
     min_score = 3 * min_score

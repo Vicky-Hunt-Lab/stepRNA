@@ -17,6 +17,14 @@ setuptools.setup(name='stepRNA',
         "Operating System :: Ubuntu",
     ],
     #packages=setuptools.find_packages(),
-    packages=['stepRNA'],
-    python_requires='>=3.6',
+    packages=["stepRNA"],
+    python_requires=">=3.6",
+    install_requires=[
+        "pysam",
+        "Bio",
+        "numpy"
+        ],
+    scripts = [
+        "bin/stepRNA-script"
+        ]
 )
