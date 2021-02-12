@@ -5,6 +5,9 @@ import os
 import sys
 from subprocess import run, PIPE
 
+#Package modules
+from stepRNA.general import replace_ext
+
 try:
     import pysam
 except ImportError:
@@ -39,7 +42,7 @@ def sam_to_bam(sam_file):
 def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
     '''Make unqiue file names for each file in a FASTA/Q file.
     
-    sqe_file [STR] - path to the Fasta/Fastq file
+    seq_file [STR] - path to the Fasta/Fastq file
     filetype [STR] - specify whether "fasta" or fastq"; default: "fasta"
     name [STR] - prefix for the header. Default: "Read"
     keep_ori [True/False] - keep the original file
@@ -54,7 +57,7 @@ def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
             record.description = ''
             SeqIO.write(record, temp, filetype)
     if keep_ori:
-       return temp_file 
+        return temp_file 
     else:
         run(['mv', temp_file, seq_file])
         return seq_file
