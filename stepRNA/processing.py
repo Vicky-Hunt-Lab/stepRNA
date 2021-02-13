@@ -89,3 +89,35 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
             SeqIO.write(read_record, fout, read_type)
         ref_records = SeqIO.parse(refs, read_type)
     return rm_ref
+
+class MakeBam():
+    '''Initialise with an open pysam AlignmentFile and remove the SQ information.
+    
+    Add pysam.AlignmentFile records with add_record
+    Use save_to_file to save to filename'''
+    def __init__(self, samfile):
+        self.header_dic = {}
+        for key in samfile.header.keys():
+            if key == 'SQ':
+                self.header_dic[key] = []
+            else:
+                self.header_dic[key] = samfile.header.get(key)
+        self.records = []
+    def add_record(self, line):
+        '''Add a SAM file record to the header dictionary and file'''
+        self.header_dic['SQ'].append({'SN': line.reference_name,
+                'LN': line.header.get_reference_length(line.reference_name)})
+        self.records.append(line)
+        record = line
+    def print_header_dic(self):
+        '''Print the header dictionary'''
+        print(self.header_dic)
+    def save_to_file(self, filename, filetype = 'bam'):
+        '''Save the information to a file: SAM or BAM. Default = bam'''
+        if filetype == 'bam':
+            with pysam.AlignmentFile(filename, 'wb', header=self.header_dic) as outfile:
+                count = 0
+                for line in self.records:
+                    line.reference_id = count
+                    count += 1
+                    outfile.write(line)

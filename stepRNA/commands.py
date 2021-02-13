@@ -38,3 +38,5 @@ def right_overhang(sorted_bam, line, ref_positions):
     else:
         #If reference_position[-1] < ref_length
         return ref_positions[-1] - (ref_length - 1), 'RR'
+
+

@@ -1,5 +1,6 @@
 #My stuff
 package_env/
+test_data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
