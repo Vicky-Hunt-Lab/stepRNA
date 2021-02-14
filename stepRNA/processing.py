@@ -14,6 +14,12 @@ except ImportError:
     print('Error: Pysam not found, can be installed with\npip3 install pysam', file=sys.stderr)
     sys.exit(1)
 
+try:
+    from Bio import SeqIO
+except ImportError:
+    print('Error: Bio.SeqIO not found, can be installed with\npip3 install Bio', file=sys.stderr)
+    sys.exit(1)
+
 def sam_to_bam(sam_file):
     '''Convert the sam file output to a sorted bam
     
@@ -62,6 +68,7 @@ def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
         run(['mv', temp_file, seq_file])
         return seq_file
 
+
 def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
     '''Search through the reference genome and reads and remove any exact matches
     
@@ -74,21 +81,42 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
     Returns: New filepath string'''
     rm_ref = replace_ext(reads, '_rmref.fasta')
     print('Writing to {}'.format(rm_ref))
-    fout = open(rm_ref, 'w')
-    ref_records = SeqIO.parse(refs, ref_type)
-    read_records = SeqIO.parse(reads, read_type)
-    for read_record in read_records:
-        keep = True
-        count = 0
+    with open(rm_ref, 'w') as fout:
+        ref_records = SeqIO.parse(refs, ref_type)
+        read_records = SeqIO.parse(reads, read_type)
+        ref_seqs = [] 
         for ref_record in ref_records:
+            ref_seqs.append(ref_record.seq)
+        ref_seqs = sorted(ref_seqs)
+        read_seqs = []
+        for read_record in read_records:
+            read_seqs.append([read_record.seq, read_record])
+        read_seqs.sort()
+        writetofasta = []
+        count = 0
+        while len(ref_seqs) != 0:
+            if count % 1000 == 0:
+                print(count)
             count += 1
-            if read_record.seq == ref_record.seq:
-                keep = False
-                break
-        if keep:
-            SeqIO.write(read_record, fout, read_type)
-        ref_records = SeqIO.parse(refs, read_type)
-    return rm_ref
+            ref_seq = ref_seqs.pop(0)
+            output = []
+            index = 0
+            for read_seq in read_seqs:
+                if read_seq[0].tomutable() == ref_seq.tomutable():
+                    index = read_seqs.index(read_seq)
+                else:
+                    output.append(read_seq[1])
+                    if index == 0:
+                        continue
+                    else:
+                        read_seqs = read_seqs[index:]
+                        SeqIO.write(output, fout, read_type)
+                        break
+    
+        SeqIO.write(output, fout, read_type)
+        return rm_ref 
+
+
 
 class MakeBam():
     '''Initialise with an open pysam AlignmentFile and remove the SQ information.
