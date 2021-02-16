@@ -1,5 +1,36 @@
 #Python modules
 import csv
+import pysam
+from collections import defaultdict
+
+def refs_counts(bamfile, unique=False):
+    '''Take a BAM file and count the number of unique references within it'''
+    samfile = pysam.AlignmentFile(bamfile, 'rb')
+    if unique:
+        return len(set(samfile.header.references))
+    else:
+        return len(samfile.header.references)
+
+def read_len_counts(bamfile):
+    '''Take a BAM file and count the number of reads with each length.
+    
+    Returns a dictionary of {length : count}'''
+    samfile = pysam.AlignmentFile(bamfile, 'rb')
+    dic = defaultdict(lambda:0) 
+    for record in samfile:
+        dic[record.query_length] += 1
+    return dic
+
+def ref_read_counts(bamfile, ref_list):
+    '''For a list of reference names count their occurences in a BAM file'''
+    for ref in ref_list:
+        dic[ref] = 0
+    samfile = pysam.AlignmentFile(bamfile, 'rb')
+    for record in samfile:
+        dic[record.reference_name] += 1
+    return dic
+
+
 
 def write_to_bam(line, left_type, right_type, prefix):
     '''Take a pysam.AlignmentFile record and write it to a file

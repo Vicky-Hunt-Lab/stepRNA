@@ -116,8 +116,6 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
         SeqIO.write(output, fout, read_type)
         return rm_ref 
 
-
-
 class MakeBam():
     '''Initialise with an open pysam AlignmentFile and remove the SQ information.
     
@@ -136,7 +134,6 @@ class MakeBam():
         self.header_dic['SQ'].append({'SN': line.reference_name,
                 'LN': line.header.get_reference_length(line.reference_name)})
         self.records.append(line)
-        record = line
     def print_header_dic(self):
         '''Print the header dictionary'''
         print(self.header_dic)
@@ -149,3 +146,70 @@ class MakeBam():
                     line.reference_id = count
                     count += 1
                     outfile.write(line)
+
+class MakeBam2():
+    '''Initialise with an open pysam AlignmentFile and remove the SQ information.
+
+    Add pysam.AlignmentFile records with add_record
+    Use save_to_file to save to filename'''
+    def __init__(self, samfile):
+        self.header_dic = {}
+        for key in samfile.header.keys():
+            if key == 'SQ':
+                self.header_dic[key] = []
+            else:
+                self.header_dic[key] = samfile.header.get(key)
+        self.all_records = defaultdict(lambda:{'record':[], 'type': [], 'unique':True})
+    def add_record(self, line, left, right):
+        '''Add a SAM file record to a dictionary along with information about whether it is unique and what type of overhang it has'''
+        ref_name = line.reference_name
+        left_type = str(left) + '_left'
+        right_type = str(right) + '_right'
+        if ref_name in self.all_records:
+            self.all_records[ref_name]['unique'] = False
+        #Add the information to dictionary
+        self.all_records[ref_name]['record'].append(line)
+        self.all_records[ref_name]['type'].append([left_type, right_type])
+    def make_dics(self):
+        '''Make unique and non-unique dictionaries to store the header information and record information for each type of overhang'''
+        self.unihead = defaultdict(lambda: copy.deepcopy(self.header_dic))
+        self.nonhead = defaultdict(lambda: copy.deepcopy(self.header_dic))
+        self.unirecords = defaultdict(lambda: [])
+        self.nonrecords = defaultdict(lambda: [])
+        for ref_name in self.all_records:
+            print(ref_name)
+            ref_length = self.all_records[ref_name]['record'][0].header.get_reference_length(ref_name)
+            def add_to_header(dic, ref_name, ref_length):
+                dic['SQ'].append({'SN' : ref_name, 'LN' : ref_length})
+                print('Header added')
+            if self.all_records[ref_name]['unique']:
+                print('Unique')
+                for typ in self.all_records[ref_name]['type']:
+                    print(typ)
+                    add_to_header(self.unihead['full'], ref_name, ref_length)
+                    add_to_header(self.unihead[typ[0]], ref_name, ref_length)
+                    add_to_header(self.unihead[typ[1]], ref_name, ref_length)
+                    self.unirecords['full'].append(self.all_records[ref_name]['record'])
+                    self.unirecords[typ[0]].append(self.all_records[ref_name]['record'])
+                    self.unirecords[typ[1]].append(self.all_records[ref_name]['record'])
+            for typ in self.all_records[ref_name]['type']:
+                print(typ)
+                add_to_header(self.nonhead['full'], ref_name, ref_length)
+                add_to_header(self.nonhead[typ[0]], ref_name, ref_length)
+                add_to_header(self.nonhead[typ[1]], ref_name, ref_length)
+                self.nonrecords['full'].append(self.all_records[ref_name]['record'])
+                self.nonrecords[typ[0]].append(self.all_records[ref_name]['record'])
+                self.nonrecords[typ[1]].append(self.all_records[ref_name]['record'])
+    def save_to_file(self, filetype = 'bam'):
+        if filetype == 'bam':
+            def make_file(head_dic, record_dic, extension):
+                for key in head_dic:
+                    with pysam.AlignmentFile(key + extension, 'wb', header=head_dic[key]) as outfile:
+                        count = 0
+                        for record in record_dic[key]:
+                            for line in record:
+                                line.reference_id = count
+                                count += 1
+                                outfile.write(line)
+            make_file(self.unihead, self.unirecords, '_unique.bam')
+            make_file(self.nonhead, self.nonrecords, '.bam')

@@ -25,6 +25,6 @@ setuptools.setup(name='stepRNA',
         "numpy"
         ],
     scripts = [
-        "bin/stepRNA-script"
+        "scripts/stepRNA-script"
         ]
 )

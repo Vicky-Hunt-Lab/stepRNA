@@ -16,6 +16,7 @@ from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist
 
 #My scripts...
 from bin import remove_exact
+from bin import make_unique
 from bin import run_bowtie
 
 #Modules that need to be installed
@@ -74,7 +75,6 @@ else:
 
 #Join together output directory and filename to make a prefix...
 prefix = os.path.join(outdir, filename)
-print(prefix)
 
 #Remove exact matches to reference if set...
 if args.remove_exact:
@@ -83,7 +83,7 @@ if args.remove_exact:
 #Make unique headers if set...
 if args.make_unique:
     reads = make_unique(reads)
-    reads = make_unique(ref)
+    refs = make_unique(ref)
 
 #Build a reference (suppress verbosity)...
 ref_base = os.path.splitext(ref)[0]
