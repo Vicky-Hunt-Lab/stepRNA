@@ -25,6 +25,6 @@ setuptools.setup(name='stepRNA',
         "Bio",
         "numpy"
         ],
-    scripts=["scripts/stepRNA"]
+    scripts=["bin/stepRNA"]
 )
 
