@@ -9,8 +9,8 @@ To install with pip:
 ```pip3 install stepRNA```
 
 To install from source:
-Make sure you have dist and build direcories for stepRNA (download from GitHub repository)
-Then run:
+Download the GitHub repository and run:
+
 ```pip3 install .```
 
 Alternative:
