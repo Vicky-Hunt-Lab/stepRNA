@@ -63,9 +63,11 @@ def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
             record.description = ''
             SeqIO.write(record, temp, filetype)
     if keep_ori:
+        print('Unique headers made')
         return temp_file 
     else:
         run(['mv', temp_file, seq_file])
+        print('Unique headers made')
         return seq_file
 
 
@@ -91,7 +93,7 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
         read_seqs = []
         for read_record in read_records:
             read_seqs.append([read_record.seq, read_record])
-        read_seqs.sort()
+        read_seqs = sorted(read_seqs, key = lambda x: x[0])
         writetofasta = []
         count = 0
         while len(ref_seqs) != 0:
@@ -103,7 +105,7 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
             index = 0
             for read_seq in read_seqs:
                 if read_seq[0].tomutable() == ref_seq.tomutable():
-                    index = read_seqs.index(read_seq)
+                    index += 1
                 else:
                     output.append(read_seq[1])
                     if index == 0:
@@ -112,7 +114,6 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
                         read_seqs = read_seqs[index:]
                         SeqIO.write(output, fout, read_type)
                         break
-    
         SeqIO.write(output, fout, read_type)
         return rm_ref 
 
@@ -141,10 +142,10 @@ class MakeBam():
         '''Save the information to a file: SAM or BAM. Default = bam'''
         if filetype == 'bam':
             with pysam.AlignmentFile(filename, 'wb', header=self.header_dic) as outfile:
-                count = 0
+                #count = 0
                 for line in self.records:
-                    line.reference_id = count
-                    count += 1
+                    line.reference_id = 0
+                    #count += 1
                     outfile.write(line)
 
 class MakeBam2():

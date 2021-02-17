@@ -1,10 +1,10 @@
 from stepRNA.processing import sam_to_bam
-from stepRNA.general import mini_maxi, replace_ext
+from stepRNA.general import mini_maxi, replace_ext, check_dir
 from subprocess import run, PIPE
 import os
 
 
-def main(ref_base, reads, min_score):
+def main(ref_base, reads, prefix, min_score):
     '''Run the main Bowtie2 command'''
     minimum, maximum = mini_maxi(reads, file_type = 'fasta')
     if min_score != -1:
@@ -41,6 +41,8 @@ if __name__ == "__main__":
     required.add_argument('--reads', '-q', help='Reads to align to the reference')
     #Add optional arugments...
     optional.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept, default is the shortest read length')
+    optional.add_argument('-n', '--name',  help='Prefix for the output files')
+    optional.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files')
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
@@ -48,6 +50,14 @@ if __name__ == "__main__":
     ref_base = args.ref_base
     reads = args.reads
     min_score = args.min_score
-    main(ref_base, reads, min_score)
+    outdir = check_dir(args.directory)
+    if args.name is None:
+        filename = os.path.splitext(reads)[0]
+    else:
+        filename = args.name
+    #Join together output directory and filename to make a prefix...
+    prefix = os.path.join(outdir, filename)
+    #Run main script
+    main(ref_base, reads, prefix, min_score)
 
 

@@ -4,8 +4,18 @@ stepRNA is a RNA-seq read processor, based on bowtie2, that will align query rea
 
 #### Installation
 
+To install with pip:
+
+```pip3 install stepRNA```
+
+To install from source:
+Make sure you have dist and build direcories for stepRNA (download from GitHub repository)
+Then run:
+```pip3 install -e .```
+
+Alternative:
 Download the GitHub repository then make the file executable with:
-```chmod +x stepRNA.py```
+```chmod +x scripts/stepRNA```
 
 Then either:
 - Make a symbolic link for stepRNA.py to your bin directory

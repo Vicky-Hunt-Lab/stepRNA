@@ -12,12 +12,10 @@ import csv
 from stepRNA.general import mini_maxi, replace_ext, check_dir
 from stepRNA.processing import make_unique, rm_ref_matches
 from stepRNA.commands import left_overhang, right_overhang
-from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist
+from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, refs_counts
 
 #Scripts to be used...
-print('At import')
 from scripts import remove_exact, make_unique, run_bowtie, cigar_process, index_bowtie
-print('Finsihed import successfully')
 
 #Modules that need to be installed
 try:
@@ -79,13 +77,13 @@ prefix = os.path.join(outdir, filename)
 
 #Remove exact matches to reference if set...
 if args.remove_exact:
-    reads = remove_exacti.main(ref, reads)
+    reads = remove_exact.main(ref, reads)
     print('Exact matches removed')
 
 #Make unique headers if set...
 if args.make_unique:
-    reads = make_unique.main(reads)
-    ref = make_unique.main(ref)
+    reads = make_unique.main(reads, 'fasta')
+    ref = make_unique.main(ref, 'fasta')
     print('Unique FASTA headers made')
 
 
@@ -94,45 +92,67 @@ ref_base = index_bowtie.main(ref)
 print('Bowtie index built')
 
 # Run bowtie alignment...
-sorted_bam = run_bowtie.main(ref_base, reads, min_score)
+sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score)
 print('Alignment completed')
 
 #Cigar process...
 right_dic, left_dic, type_dic, read_len_dic, refs_read_dic = cigar_process.main(sorted_bam, prefix, args.write_json)
 print('Cigar strings processed')
 
+# Count unique references
+right_unique_dic = defaultdict(lambda:0) 
+left_unique_dic = defaultdict(lambda:0)
+for f in os.listdir('AlignmentFiles'):
+    if 'passed' not in f:
+        key = int(f.split('_')[-3])
+        if f.split('_')[-2] == 'left':
+            left_unique_dic[key] = refs_counts(os.path.join('AlignmentFiles', f), unique = True)
+        if f.split('_')[-2] == 'right':
+            right_unique_dic[key] = refs_counts(os.path.join('AlignmentFiles', f), unique = True)
+
+
+
 #Put overhangs infomation into a csv and print to terminal...
 print('\n## Overhang counts ##')
 make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['OH','Left','Right'])
+print('\n## Unique overhang counts ##')
+make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['OH','Left','Right'])
 print('\n## Overhang types ##')
 make_type_csv(type_dic, prefix + '_type.csv', ['OH_type', 'count'])
 print('\n## Read lengths ##')
 make_type_csv(read_len_dic, prefix + '_read_len.csv', ['Read_length', 'count'], sort=True)
 make_type_csv(refs_read_dic, prefix + '_ref_hits.csv', ['Reference', 'count'], show=False)
 print()
-with open(prefix + '_overhang_summary.csv') as summary:
-    left_dens = []
-    right_dens = []
-    left_tot = 0
-    right_tot = 0
-    keys = []
-    csv_reader = csv.reader(summary, delimiter=',')
-    head = next(csv_reader)
-    for line in csv_reader:
-        keys.append(line[0])
-        left_dens.append(int(line[1]))
-        left_tot += int(line[1])
-        right_dens.append(int(line[2]))
-        right_tot += int(line[2])
+
+def make_hist(csv_in):
+    with open(csv_in) as summary:
+        left_dens = []
+        right_dens = []
+        left_tot = 0
+        right_tot = 0
+        keys = []
+        csv_reader = csv.reader(summary, delimiter=',')
+        head = next(csv_reader)
+        for line in csv_reader:
+            keys.append(line[0])
+            left_dens.append(int(line[1]))
+            left_tot += int(line[1])
+            right_dens.append(int(line[2]))
+            right_tot += int(line[2])
 
 
-for key in range(len(keys)):
-    left_dens[key] = 100 * left_dens[key] / left_tot
-    right_dens[key] = 100 * right_dens[key] / right_tot
-    
-#Print histogram of overhangs to terminal...
-print('Left Handside Overhang Histogram')
-print_hist(left_dens, keys)
+    for key in range(len(keys)):
+        left_dens[key] = 100 * left_dens[key] / left_tot
+        right_dens[key] = 100 * right_dens[key] / right_tot
+        
+    #Print histogram of overhangs to terminal...
+    print('LHS Overhang Histogram')
+    print_hist(left_dens, keys)
 
-print('Right Handside Overhang Histogram')
-print_hist(right_dens, keys)
+    print('RHS Overhang Histogram')
+    print_hist(right_dens, keys)
+
+print('\nAll aligned reads')
+make_hist(prefix + '_overhang.csv')
+print('\nUnique aligned reads')
+make_hist(prefix + '_unique_overhang.csv')

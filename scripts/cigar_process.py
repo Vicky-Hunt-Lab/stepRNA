@@ -1,8 +1,11 @@
 from collections import defaultdict
 import json
+import os
 
 from stepRNA.processing import MakeBam
 from stepRNA.commands import left_overhang, right_overhang
+from stepRNA.general import check_dir
+from stepRNA.output import refs_counts
 
 import pysam
 
@@ -47,10 +50,13 @@ def main(sorted_bam, filepath, write_json=False):
                         refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
                     except Exception:
                         continue
+    directory = os.path.dirname(filepath)
+    outdir = os.path.join(directory, 'AlignmentFiles')
+    check_dir(outdir)
     for key in MakeBam_dic:
-        print(filepath + key + '.bam')
-        MakeBam_dic[key].save_to_file(filepath + key + '.bam')
-    all_passed.save_to_file(filepath + 'passed.bam')
+        outfile = os.path.join(outdir, '{}_{}.bam'.format(os.path.basename(filepath), key))
+        MakeBam_dic[key].save_to_file(outfile)
+    all_passed.save_to_file(os.path.join(outdir, '{}_passed.bam'.format(os.path.basename(filepath))))
     if write_json:
         for dic in right_dic, left_dic, type_dic, read_len_dic, refs_read_dic:
             #Needs to be sorted out!!!
