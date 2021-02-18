@@ -4,6 +4,7 @@
 import os
 import sys
 from subprocess import run, PIPE
+from collections import defaultdict
 
 #Package modules
 from stepRNA.general import replace_ext
