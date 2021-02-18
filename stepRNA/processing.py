@@ -103,9 +103,11 @@ def rm_ref_matches(refs, reads, ref_type='fasta', read_type='fasta'):
             ref_seq = ref_seqs.pop(0)
             output = []
             index = 0
+            index_counter = 0
             for read_seq in read_seqs:
+                index_counter += 1
                 if read_seq[0].tomutable() == ref_seq.tomutable():
-                    index += 1
+                    index = index_counter
                 else:
                     output.append(read_seq[1])
                     if index == 0:

@@ -15,7 +15,11 @@ from stepRNA.commands import left_overhang, right_overhang
 from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, refs_counts
 
 #Scripts to be used...
-from stepRNA.scripts import remove_exact, make_unique, run_bowtie, cigar_process, index_bowtie
+import stepRNA.remove_exact as remove_exact
+import stepRNA.make_unique as make_unique
+import stepRNA.run_bowtie as run_bowtie
+import stepRNA.index_bowtie as index_bowtie
+import stepRNA.cigar_process as cigar_process
 
 #Modules that need to be installed
 try:
