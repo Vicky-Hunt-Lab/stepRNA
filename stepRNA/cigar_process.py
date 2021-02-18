@@ -34,13 +34,13 @@ def main(sorted_bam, filepath, write_json=False):
                         right, right_type = right_overhang(samfile, line, ref_pos)
                         left, left_type = left_overhang(samfile, line, ref_pos)
                         #Add to MakeBam
-                        def add_to_MakeBam(MakeBam_dic, right, additional):
-                            right = str(right) + '_' + additional 
-                            if MakeBam_dic[right + '_overhang'] == None:
-                                MakeBam_dic[right + '_overhang'] = MakeBam(samfile)
-                            MakeBam_dic.get(right + '_overhang').add_record(line)
-                        add_to_MakeBam(MakeBam_dic, right, 'right')
-                        add_to_MakeBam(MakeBam_dic, left, 'left')
+                        def add_to_MakeBam(dic, length, additional, record):
+                            length = str(length) + '_' + additional 
+                            if dic[length + '_overhang'] == None:
+                                dic[length + '_overhang'] = MakeBam(samfile)
+                            dic.get(length + '_overhang').add_record(record)
+                        add_to_MakeBam(MakeBam_dic, right, 'right', line)
+                        add_to_MakeBam(MakeBam_dic, left, 'left', line)
                         all_passed.add_record(line)
                         # Create dictionaries to sort information...
                         right_dic[right] += 1 # right overhang count
