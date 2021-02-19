@@ -34,7 +34,8 @@ def right_overhang(sorted_bam, line, ref_positions):
         if line.reference_end != ref_length:
            raise Exception
         else:
-            return line.query_alignment_end - ref_length, 'RQ'
+            print(line.query_length - ref_length)
+            return ref_length - line.query_length, 'RQ'
     else:
         #If reference_position[-1] < ref_length
         return ref_positions[-1] - (ref_length - 1), 'RR'
