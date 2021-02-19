@@ -83,7 +83,8 @@ if __name__ == "__main__":
     )
 
     #Add required arguments...
-    required.add_argument('--bamfile', '-b', help='Path to a sorted BAMfile')
+    required.add_argument('--bamfile', '-b', help='Path to a sorted BAMfile', required=True)
+    optional.add_argument('--prefix', '-p', help='Prefix to add to the file. Default is file basename')
 
     flags.add_argument('--write_json', '-j', action='store_true' , help='Write counts dictionaries to JSON files')
 
@@ -91,4 +92,8 @@ if __name__ == "__main__":
 
     sorted_bam = args.bamfile
     write_json = args.write_json
+    if args.prefix is None:
+        prefix = os.path.splitext(sorted_bam)[0]
+    else:
+        prefix = args.prefix
     right_dic, left_dic, type_dic, read_len_dic, refs_read_dic = main(sorted_bam, prefix, write_json)

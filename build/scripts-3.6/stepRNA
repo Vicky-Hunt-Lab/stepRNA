@@ -106,7 +106,7 @@ print('Cigar strings processed')
 # Count unique references
 right_unique_dic = defaultdict(lambda:0) 
 left_unique_dic = defaultdict(lambda:0)
-for f in os.listdir('AlignmentFiles'):
+for f in os.listdir(os.path.join(outdir, 'AlignmentFiles')):
     if 'passed' not in f:
         key = int(f.split('_')[-3])
         if f.split('_')[-2] == 'left':
