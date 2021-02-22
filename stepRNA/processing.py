@@ -145,10 +145,10 @@ class MakeBam():
         '''Save the information to a file: SAM or BAM. Default = bam'''
         if filetype == 'bam':
             with pysam.AlignmentFile(filename, 'wb', header=self.header_dic) as outfile:
-                #count = 0
+                count = 0
                 for line in self.records:
-                    line.reference_id = 0
-                    #count += 1
+                    line.reference_id = count 
+                    count += 1
                     outfile.write(line)
 
 class MakeBam2():
