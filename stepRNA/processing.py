@@ -132,23 +132,29 @@ class MakeBam():
                 self.header_dic[key] = []
             else:
                 self.header_dic[key] = samfile.header.get(key)
+        self.name_lst = []
+        self.length_lst = []
         self.records = []
+        self.ind = 0
     def add_record(self, line):
         '''Add a SAM file record to the header dictionary and file'''
-        self.header_dic['SQ'].append({'SN': line.reference_name,
-                'LN': line.header.get_reference_length(line.reference_name)})
-        self.records.append(line)
-    def print_header_dic(self):
-        '''Print the header dictionary'''
-        print(self.header_dic)
+        if line.reference_name in self.name_lst:
+            self.records.append([line, self.name_lst.index(line.reference_name)])
+        else:
+            self.records.append([line, self.ind])
+            self.name_lst.append(line.reference_name)
+            self.length_lst.append(line.header.get_reference_length(line.reference_name))
+            self.ind += 1
+
     def save_to_file(self, filename, filetype = 'bam'):
         '''Save the information to a file: SAM or BAM. Default = bam'''
+        #Process header SQ to remove duplicats
+        for name, length in zip(self.name_lst, self.length_lst):
+            self.header_dic['SQ'].append({'SN': name, 'LN' : length})
         if filetype == 'bam':
             with pysam.AlignmentFile(filename, 'wb', header=self.header_dic) as outfile:
-                count = 0
-                for line in self.records:
-                    line.reference_id = count 
-                    count += 1
+                for line, ind in self.records:
+                    line.reference_id = ind 
                     outfile.write(line)
 
 class MakeBam2():
@@ -205,6 +211,7 @@ class MakeBam2():
                 self.nonrecords[typ[0]].append(self.all_records[ref_name]['record'])
                 self.nonrecords[typ[1]].append(self.all_records[ref_name]['record'])
     def save_to_file(self, filetype = 'bam'):
+        print(self.records)
         if filetype == 'bam':
             def make_file(head_dic, record_dic, extension):
                 for key in head_dic:
