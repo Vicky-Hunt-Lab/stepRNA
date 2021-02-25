@@ -77,7 +77,8 @@ else:
     filename = args.name
 
 #Join together output directory and filename to make a prefix...
-prefix = os.path.join(outdir, filename)
+prefix = os.path.join(outdir, os.path.basename(filename))
+print(prefix)
 
 #Remove exact matches to reference if set...
 if args.remove_exact:
@@ -86,8 +87,8 @@ if args.remove_exact:
 
 #Make unique headers if set...
 if args.make_unique:
-    reads = make_unique.main(reads, 'fasta')
-    ref = make_unique.main(ref, 'fasta')
+    reads = make_unique.main(reads, 'fasta', name = 'Read')
+    ref = make_unique.main(ref, 'fasta', name = 'Ref')
     print('Unique FASTA headers made')
 
 
@@ -96,6 +97,7 @@ ref_base = index_bowtie.main(ref)
 print('Bowtie index built')
 
 # Run bowtie alignment...
+print(prefix)
 sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score)
 print('Alignment completed')
 
