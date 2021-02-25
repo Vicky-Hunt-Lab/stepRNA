@@ -4,10 +4,18 @@
 
 stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA-seq query reads (passenger sequences) to reference sequences (siRNAs) and output information about the type and length of overhangs uncovered. It was originally developed for uncovering Dicer processing signatures but is not limited to just this.
 
+**Table of Contents:**
+- Installation
+- Use
+- Example
+- News
+- Licence
+- Additional Information
+
 ## Installation
 
 In order for stepRNA to run you must have:
-- Bowtie2 >= v2.3.4 (see [BOWTIE2](URL_LINK) for more details)
+- Bowtie2 >= v2.3.4 (see [BOWTIE2 website](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for more details)
 - Bio >= v0.3.0 (automatically installed with pip)
 - numpy >= v1.20.1 (autoamtically installed with pip)
 - pysam >= v0.16.0.1 (autoamtically installed with pip)
@@ -76,6 +84,9 @@ v1.0.0 (25/02/21):
 
 See [NEWS](URL_LINK) for historical updates of release notes
 
+## Licence
+
+stepRNA is licensed under the MIT license.  See [LICENSE](URL_LINK) file for details.
 
 ## Additional Information
 
