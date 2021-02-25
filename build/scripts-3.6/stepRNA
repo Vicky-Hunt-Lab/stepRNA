@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!python
 
 #Python Modules
 import numpy as np
@@ -15,7 +15,11 @@ from stepRNA.commands import left_overhang, right_overhang
 from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, refs_counts
 
 #Scripts to be used...
-from scripts import remove_exact, make_unique, run_bowtie, cigar_process, index_bowtie
+import stepRNA.remove_exact as remove_exact
+import stepRNA.make_unique as make_unique
+import stepRNA.run_bowtie as run_bowtie
+import stepRNA.index_bowtie as index_bowtie
+import stepRNA.cigar_process as cigar_process
 
 #Modules that need to be installed
 try:
@@ -102,13 +106,14 @@ print('Cigar strings processed')
 # Count unique references
 right_unique_dic = defaultdict(lambda:0) 
 left_unique_dic = defaultdict(lambda:0)
-for f in os.listdir('AlignmentFiles'):
+fpath = os.path.join(outdir, 'AlignmentFiles')
+for f in os.listdir(fpath):
     if 'passed' not in f:
         key = int(f.split('_')[-3])
         if f.split('_')[-2] == 'left':
-            left_unique_dic[key] = refs_counts(os.path.join('AlignmentFiles', f), unique = True)
+            left_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True)
         if f.split('_')[-2] == 'right':
-            right_unique_dic[key] = refs_counts(os.path.join('AlignmentFiles', f), unique = True)
+            right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True)
 
 
 

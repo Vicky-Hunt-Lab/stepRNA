@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='stepRNA',
-    version='0.1.0',
+    version='0.1.9',
     author='Ben Murcott',
     author_email='bmm41@bath.ac.uk',
     description='Align short RNA seqeuncing reads to determine the length of of overhang.',
@@ -21,10 +21,10 @@ setuptools.setup(name='stepRNA',
     packages=["stepRNA"],
     python_requires=">=3.6",
     install_requires=[
-        "pysam",
-        "Bio",
-        "numpy"
+        "pysam>=0.16.0.1",
+        "Bio>=0.3.0",
+        "numpy>=1.20.1"
         ],
-    scripts=["scripts/stepRNA"]
+    scripts=["bin/stepRNA"]
 )
 
