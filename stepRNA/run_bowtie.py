@@ -4,7 +4,7 @@ from subprocess import run, PIPE
 import os
 
 
-def main(ref_base, reads, prefix, min_score):
+def main(ref_base, reads, prefix, min_score, logger):
     '''Run the main Bowtie2 command'''
     minimum, maximum = mini_maxi(reads, file_type = 'fasta')
     if min_score != -1:
@@ -14,7 +14,9 @@ def main(ref_base, reads, prefix, min_score):
     # Run bowtie command...
     sam_file = replace_ext(prefix, '.sam')
     command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--nofw','--local', '--ma', '3', '--mp', '{},{}'.format(maximum, maximum), '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
-    bowtie = run(command)
+    bowtie = run(command, stderr=PIPE)
+    logger.write('Alignment statistics (from Bowtie2):')
+    logger.write(bowtie.stderr.decode('utf-8'))
     #Convert sam to bam...
     sorted_bam = sam_to_bam(sam_file)
     return sorted_bam

@@ -78,26 +78,34 @@ else:
 
 #Join together output directory and filename to make a prefix...
 prefix = os.path.join(outdir, os.path.basename(filename))
-
 logger = Logger(prefix + '.log')
+logger.write('Output to: {}'.format(outdir))
+
 #Remove exact matches to reference if set...
 if args.remove_exact:
+    logger.write('Removing exact matches to read FASTA')
     reads = remove_exact.main(ref, reads)
     logger.write('Exact matches removed')
 
 #Make unique headers if set...
 if args.make_unique:
+    logger.write('Making read headers unique...')
     reads = make_unique.main(reads, 'fasta', name = 'Read')
+    logger.write('Unique read headers complete')
+    logger.write('Making reference headers unique...')
     ref = make_unique.main(ref, 'fasta', name = 'Ref')
+    logger.write('Unquire reference headers complete')
     logger.write('Unique FASTA headers made')
 
 
 #Build a reference (suppress verbosity)...
+logger.write('Building index...')
 ref_base = index_bowtie.main(ref)
 logger.write('Bowtie index built')
 
 # Run bowtie alignment...
-sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score)
+logger.write('Aligning...')
+sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score, logger)
 logger.write('Alignment completed')
 
 #Cigar process...
