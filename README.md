@@ -1,14 +1,16 @@
 # stepRNA
 
+## Overview
+
 stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA-seq query reads (passenger sequences) to reference sequences (siRNAs) and output information about the type and length of overhangs uncovered. It was originally developed for uncovering Dicer processing signatures but is not limited to just this.
 
-#### Installation
+## Installation
 
 In order for stepRNA to run you must have:
-- Bowtie2 >= vX.X.X (see BOWTIE2_URL for more details)
-- Bio >= vX.X.X (automatically installed with pip)
-- numpy >= vX.X.X (autoamtically installed with pip)
-- pysam >= vX.X.X (autoamtically installed with pip)
+- Bowtie2 >= v2.3.4 (see [BOWTIE2](URL_LINK) for more details)
+- Bio >= v0.3.0 (automatically installed with pip)
+- numpy >= v1.20.1 (autoamtically installed with pip)
+- pysam >= v0.16.0.1 (autoamtically installed with pip)
 
 **To install with pip:**
 
@@ -41,16 +43,42 @@ Then either:
 - Direct PATH to the directory with stepRNA in it
 ```export PATH=$PATH:FULL_PATH_TO_GitHubRepo```
 
-#### Use:
-See the documentation for a detailed description on how to use stepRNA.
+## Use:
+
+See the documentation for a detailed description on how to use stepRNA ([MANUAL](URL_LINK))
+
 The quickest way to use stepRNA:
 
 ```stepRNA --reference REFERENCE --reads QUERY```
  
-This will align the reads to the reference sequences and output into the current diretory using the READS filename as the prefix. The following should be met:
-- **REFERENCE** and **QUERY** must have unique FASTA headers (if not use ```-u```)
-- If **REFERENCE** have been extracted from **QUERY** then it is advised to remove the exact matches from the QUERY (use ```-e```) - ***This takes a long time!***
+This will align the reads to the reference sequences and output into the current diretory using the READS filename as the prefix. **REFERENCE** and **QUERY** must have unique FASTA headers (if not use ```-u```)
 
 Helpful options:
 - ```--name``` can be used to customise the prefix name
 - ```--directory``` can be used to specify an output directory
+
+## Example:
+
+Using the reads from stepRNA/example_data:
+
+```stepRNA --reference stepRNA/example_data/FILENAME -- reads stepRNA/example_data/FILENAME --directory stepRNA_example```
+
+This will create a new direxotry called *stepRNA_example* that contains:
+- AligmentFile/; a directory containing BAM files for each of the overhang lengths
+- CSVs; containing count information (see [MANUAL](URL_LINK) for more information)
+
+## News
+
+Latest release notes:
+
+v1.0.0 (25/02/21):
+- v1 released
+
+See [NEWS](URL_LINK) for historical updates of release notes
+
+For more information:
+- [FAQs](URL_LINK) to see commonly asked quesitons
+- [USER MANUAL](URL_LINK) to see detailed instructions and all of the options
+
+If you use stepRNA in your work please cite:
+[stepRNA: identification of Dicer-processing signatures and passenger strand lengths in small RNA (Murcott, Pawluk & Hunt, 2021)](URL_LINK)
