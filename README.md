@@ -22,7 +22,7 @@ In order for stepRNA to run you must have:
 
 **To install with pip:**
 
-```pip3 install stepRNA```
+```pip install stepRNA```
 
 **To install from source:**
 
@@ -37,8 +37,26 @@ In order for stepRNA to run you must have:
 
 4) Run the installation:
 
-```pip3 install .```
+```pip install .```
 
+**Installing into a Virtual Environment**
+
+This can be useful if root privalages are not available to the user.
+
+1) Create a virutal environment:
+
+We recommend using virtualenv
+```pip install virtualenv```
+
+2) Create and activate the environment:
+
+```virtualenv stepRNA_env```
+
+```source /stepRNA_env/bin/activate```
+
+3) Install with pip:
+
+```pip install stepRNA```
 
 **Alternative:**
 
