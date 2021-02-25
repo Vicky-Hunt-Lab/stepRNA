@@ -12,7 +12,7 @@ import csv
 from stepRNA.general import mini_maxi, replace_ext, check_dir
 from stepRNA.processing import make_unique, rm_ref_matches
 from stepRNA.commands import left_overhang, right_overhang
-from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, refs_counts
+from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, refs_counts, Logger
 
 #Scripts to be used...
 import stepRNA.remove_exact as remove_exact
@@ -78,32 +78,31 @@ else:
 
 #Join together output directory and filename to make a prefix...
 prefix = os.path.join(outdir, os.path.basename(filename))
-print(prefix)
 
+logger = Logger(prefix + '.log')
 #Remove exact matches to reference if set...
 if args.remove_exact:
     reads = remove_exact.main(ref, reads)
-    print('Exact matches removed')
+    logger.write('Exact matches removed')
 
 #Make unique headers if set...
 if args.make_unique:
     reads = make_unique.main(reads, 'fasta', name = 'Read')
     ref = make_unique.main(ref, 'fasta', name = 'Ref')
-    print('Unique FASTA headers made')
+    logger.write('Unique FASTA headers made')
 
 
 #Build a reference (suppress verbosity)...
 ref_base = index_bowtie.main(ref)
-print('Bowtie index built')
+logger.write('Bowtie index built')
 
 # Run bowtie alignment...
-print(prefix)
 sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score)
-print('Alignment completed')
+logger.write('Alignment completed')
 
 #Cigar process...
 right_dic, left_dic, type_dic, read_len_dic, refs_read_dic = cigar_process.main(sorted_bam, prefix, args.write_json)
-print('Cigar strings processed')
+logger.write('Cigar strings processed')
 
 # Count unique references
 right_unique_dic = defaultdict(lambda:0) 
@@ -120,13 +119,13 @@ for f in os.listdir(fpath):
 
 
 #Put overhangs infomation into a csv and print to terminal...
-print('\n## Overhang counts ##')
+logger.write('\n## Overhang counts ##')
 make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['OH','Left','Right'])
-print('\n## Unique overhang counts ##')
+logger.write('\n## Unique overhang counts ##')
 make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['OH','Left','Right'])
-print('\n## Overhang types ##')
+logger.write('\n## Overhang types ##')
 make_type_csv(type_dic, prefix + '_type.csv', ['OH_type', 'count'])
-print('\n## Read lengths ##')
+logger.write('\n## Read lengths ##')
 make_type_csv(read_len_dic, prefix + '_read_len.csv', ['Read_length', 'count'], sort=True)
 make_type_csv(refs_read_dic, prefix + '_ref_hits.csv', ['Reference', 'count'], show=False)
 print()
@@ -153,13 +152,13 @@ def make_hist(csv_in):
         right_dens[key] = 100 * right_dens[key] / right_tot
         
     #Print histogram of overhangs to terminal...
-    print('LHS Overhang Histogram')
+    logger.write('LHS Overhang Histogram')
     print_hist(left_dens, keys)
 
-    print('RHS Overhang Histogram')
+    logger.write('RHS Overhang Histogram')
     print_hist(right_dens, keys)
 
-print('\nAll aligned reads')
+logger.write('\nAll aligned reads')
 make_hist(prefix + '_overhang.csv')
-print('\nUnique aligned reads')
+logger.write('\nUnique aligned reads')
 make_hist(prefix + '_unique_overhang.csv')

@@ -2,6 +2,7 @@
 import csv
 import pysam
 from collections import defaultdict
+import sys
 
 def refs_counts(bamfile, unique=False):
     '''Take a BAM file and count the number of unique references within it'''
@@ -113,3 +114,14 @@ def print_hist(density_dic, keys):
         except ValueError:
             print('{}\t{}'.format(keys[item], ''))
 
+class Logger(object):
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, 'w')
+
+    def write(self, message):
+        self.terminal.write(message + '\n')
+        self.log.write(message + '\n')
+
+    def close(self):
+        self.log.close()
