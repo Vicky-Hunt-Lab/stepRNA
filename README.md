@@ -76,9 +76,13 @@ v1.0.0 (25/02/21):
 
 See [NEWS](URL_LINK) for historical updates of release notes
 
+
+## Additional Information
+
 For more information:
-- [FAQs](URL_LINK) to see commonly asked quesitons
-- [USER MANUAL](URL_LINK) to see detailed instructions and all of the options
+- Go to [FAQs](URL_LINK) to see commonly asked quesitons
+- Loo at the [USER MANUAL](URL_LINK) to see detailed instructions and all of the available options
 
 If you use stepRNA in your work please cite:
+
 [stepRNA: identification of Dicer-processing signatures and passenger strand lengths in small RNA (Murcott, Pawluk & Hunt, 2021)](URL_LINK)
