@@ -1,27 +1,43 @@
 # stepRNA
 
-stepRNA is a RNA-seq read processor, based on bowtie2, that will align query reads to reference sequences and output information about the type and length of overhangs uncovered. It was originally developed for processing DICER RNAs but is not limited to just this.
+stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA-seq query reads (passenger sequences) to reference sequences (siRNAs) and output information about the type and length of overhangs uncovered. It was originally developed for uncovering Dicer processing signatures but is not limited to just this.
 
 #### Installation
 
-To install with pip:
+In order for stepRNA to run you must have:
+- Bowtie2 >= vX.X.X (see BOWTIE2_URL for more details)
+- Bio >= vX.X.X (automatically installed with pip)
+- numpy >= vX.X.X (autoamtically installed with pip)
+- pysam >= vX.X.X (autoamtically installed with pip)
+
+**To install with pip:**
 
 ```pip3 install stepRNA```
 
-To install from source:
-Download the GitHub repository and run:
+**To install from source:**
+
+1) Download stepRNA-X.X.X.tar.gz from PyPI_URL:
+2) Unzip it:
+
+```tar -xvzf stepRNA-X.X.X.tar.gz```
+
+3) Move into stepRNA-X.X.X repository:
+
+```cd stepRNA-X.X.X```
+
+4) Run the installation:
 
 ```pip3 install .```
 
-Alternative:
-Download the GitHub repository then make the file executable with:
-```chmod +x scripts/stepRNA```
+
+**Alternative:**
+
+Download the GitHub repository then make the script executable with:
+```chmod +x bin/stepRNA```
 
 Then either:
 - Make a symbolic link for stepRNA.py to your bin directory
 ```ln FULL_PATH_TO_stepRNA.py FULL_PATH_TO_BIN```
-- Copy the stepRNA into your bin directory
-```cp stepRNA.py FULL_PATH_TO_BIN```
 - Direct PATH to the directory with stepRNA in it
 ```export PATH=$PATH:FULL_PATH_TO_GitHubRepo```
 
