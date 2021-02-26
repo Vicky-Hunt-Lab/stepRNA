@@ -59,9 +59,10 @@ We recommend using virtualenv
 
 2) Create and activate the environment:
 
-```virtualenv stepRNA_env```
-
-```source /stepRNA_env/bin/activate```
+```
+virtualenv stepRNA_env
+source /stepRNA_env/bin/activate
+```
 
 3) Install with pip:
 
