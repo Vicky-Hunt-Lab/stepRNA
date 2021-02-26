@@ -5,18 +5,25 @@
 stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA-seq query reads (passenger sequences) to reference sequences (siRNAs) and output information about the type and length of overhangs uncovered. It was originally developed for uncovering Dicer processing signatures but is not limited to just this.
 
 **Table of Contents:**
-- Installation
-- Use
-- Example
-- News
-- Licence
-- Additional Information
+- [Installation](#Installation)
+- [Use](#Use)
+- [Example](#Example)
+- [News](#News)
+- [Licence](#Licence)
+- [Additional Information](#Additional-Information)
+
+## Reporting Issues
+
+Please report any issues to the stepRNA GitHub page or via email:
+- https://github.com/bmm514/stepRNA/issues
+- benmurcott96@gmail.com (Ben Murcott)
+- v.l.hunt@bath.ac.uk (Vicky Hunt)
 
 ## Installation
 
 In order for stepRNA to run you must have:
 - Bowtie2 >= v2.3.4 (see [BOWTIE2 website](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for more details)
-- Bio >= v0.3.0 (automatically installed with pip)
+- biopython >= v0.3.0 (automatically installed with pip)
 - numpy >= v1.19.0 (autoamtically installed with pip)
 - pysam >= v0.16.0.1 (autoamtically installed with pip)
 
@@ -39,7 +46,7 @@ If this doesn't work due to non-root access issues see **Installing into a Virtu
 
 4) Run the installation:
 
-```pip install .```
+```python3 setup.py install```
 
 **Installing into a Virtual Environment**
 
@@ -60,17 +67,6 @@ We recommend using virtualenv
 
 ```pip install stepRNA```
 
-**Alternative:**
-
-Download the GitHub repository then make the script executable with:
-```chmod +x bin/stepRNA```
-
-Then either:
-- Make a symbolic link for stepRNA.py to your bin directory
-```ln FULL_PATH_TO_stepRNA.py FULL_PATH_TO_BIN```
-- Direct PATH to the directory with stepRNA in it
-```export PATH=$PATH:FULL_PATH_TO_GitHubRepo```
-
 ## Use:
 
 See the documentation for a detailed description on how to use stepRNA ([MANUAL](URL_LINK))
@@ -89,9 +85,9 @@ Helpful options:
 
 Using the reads from stepRNA/example_data:
 
-```stepRNA --reference stepRNA/example_data/FILENAME -- reads stepRNA/example_data/FILENAME --directory stepRNA_example```
+```stepRNA --reference stepRNA/example_data/FILENAME --reads stepRNA/example_data/FILENAME --directory stepRNA_example```
 
-This will create a new direxotry called *stepRNA_example* that contains:
+This will create a new direcotry called *stepRNA_example* that contains:
 - AligmentFile/; a directory containing BAM files for each of the overhang lengths
 - CSVs; containing count information (see [MANUAL](URL_LINK) for more information)
 

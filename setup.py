@@ -22,7 +22,7 @@ setuptools.setup(name='stepRNA',
     python_requires=">=3.6",
     install_requires=[
         "pysam>=0.16.0.1",
-        "Bio>=0.3.0",
+        "biopython>=1.78",
         "numpy>=1.19.0"
         ],
     scripts=["bin/stepRNA",
