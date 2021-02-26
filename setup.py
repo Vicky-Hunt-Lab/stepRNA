@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='stepRNA',
-    version='1.1-beta',
+    version='1.2-beta',
     author='Ben Murcott',
     author_email='bmm41@bath.ac.uk',
     description='Align short RNA seqeuncing reads to determine the length of of overhang.',
@@ -23,7 +23,7 @@ setuptools.setup(name='stepRNA',
     install_requires=[
         "pysam>=0.16.0.1",
         "Bio>=0.3.0",
-        "numpy>=1.20.1"
+        "numpy>=1.19.0"
         ],
     scripts=["bin/stepRNA",
     "stepRNA/stepRNA_run_bowtie.py",

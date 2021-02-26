@@ -17,7 +17,7 @@ stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA
 In order for stepRNA to run you must have:
 - Bowtie2 >= v2.3.4 (see [BOWTIE2 website](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for more details)
 - Bio >= v0.3.0 (automatically installed with pip)
-- numpy >= v1.20.1 (autoamtically installed with pip)
+- numpy >= v1.19.0 (autoamtically installed with pip)
 - pysam >= v0.16.0.1 (autoamtically installed with pip)
 
 **To install with pip (recommended):**
