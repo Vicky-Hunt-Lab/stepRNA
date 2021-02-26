@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from collections import defaultdict
 import json
 import os
@@ -50,8 +52,9 @@ def main(sorted_bam, filepath, write_json=False):
                         refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
                     except Exception:
                         continue
-    directory = os.path.dirname(filepath)
-    outdir = os.path.join(directory, 'AlignmentFiles')
+    #directory = os.path.dirname(filepath)
+    #outdir = os.path.join(directory, 'AlignmentFiles')
+    outdir = filepath + '_AlignmentFiles'
     check_dir(outdir)
     for key in MakeBam_dic:
         outfile = os.path.join(outdir, '{}_{}.bam'.format(os.path.basename(filepath), key))

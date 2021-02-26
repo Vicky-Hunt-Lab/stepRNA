@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from stepRNA.processing import sam_to_bam
 from stepRNA.general import mini_maxi, replace_ext, check_dir
 from subprocess import run, PIPE

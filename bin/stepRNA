@@ -17,9 +17,9 @@ from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, re
 #Scripts to be used...
 import stepRNA.remove_exact as remove_exact
 import stepRNA.make_unique as make_unique
-import stepRNA.run_bowtie as run_bowtie
+import stepRNA.stepRNA-run_bowtie as run_bowtie
 import stepRNA.index_bowtie as index_bowtie
-import stepRNA.cigar_process as cigar_process
+import stepRNA.stepRNA-cigar_process as cigar_process
 
 #Modules that need to be installed
 try:
@@ -60,6 +60,7 @@ optional.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum s
 flags.add_argument('-e', '--remove_exact', action='store_true', help='Remove exact read matches to the reference sequence')
 flags.add_argument('-u', '--make_unique', action='store_true', help='Make FASTA headers unique in reference and reads i.e. >Read_1 >Read_2')
 flags.add_argument('-j', '--write_json', action='store_true', help='Write count dictionaries to a JSON file')
+flags.add_argument('-V', '--version', action='version', version='stepRNA v1.0.0', help='Print version number then exit.')
 
 #parser._action_groups.append(optional)
 #parser._action_groups.append(flags)
@@ -109,13 +110,23 @@ sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score, logger)
 logger.write('Alignment completed')
 
 #Cigar process...
+fpath = os.path.join(outdir, prefix + '_AlignmentFiles')
+if os.path.isdir(fpath):
+    logger.write('Removing contents in {}'.format(fpath))
+    for f in os.listdir(fpath):
+        try:
+            os.remove(os.path.join(fpath, f))
+        except:
+            logger.log('Could not remove {}'.format(f))
+
+logger.write('Processing Cigar strings...')
 right_dic, left_dic, type_dic, read_len_dic, refs_read_dic = cigar_process.main(sorted_bam, prefix, args.write_json)
 logger.write('Cigar strings processed')
 
 # Count unique references
 right_unique_dic = defaultdict(lambda:0) 
 left_unique_dic = defaultdict(lambda:0)
-fpath = os.path.join(outdir, 'AlignmentFiles')
+fpath = os.path.join(outdir, prefix + '_AlignmentFiles')
 for f in os.listdir(fpath):
     if 'passed' not in f:
         key = int(f.split('_')[-2])
@@ -129,14 +140,14 @@ for f in os.listdir(fpath):
 
 #Put overhangs infomation into a csv and print to terminal...
 logger.write('\n## Overhang counts ##')
-make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['OH','Left','Right'])
+make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['Overhang','5prime','3prime'])
 logger.write('\n## Unique overhang counts ##')
-make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['OH','Left','Right'])
+make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['Overhang','3prime','5prime'])
 logger.write('\n## Overhang types ##')
-make_type_csv(type_dic, prefix + '_type.csv', ['OH_type', 'count'])
+make_type_csv(type_dic, prefix + '_overhang_type.csv', ['Classification', 'count'])
 logger.write('\n## Read lengths ##')
-make_type_csv(read_len_dic, prefix + '_read_len.csv', ['Read_length', 'count'], sort=True)
-make_type_csv(refs_read_dic, prefix + '_ref_hits.csv', ['Reference', 'count'], show=False)
+make_type_csv(read_len_dic, prefix + '_passenger_length.csv', ['sRNA_read', 'passenger_count'], sort=True)
+make_type_csv(refs_read_dic, prefix + '_passenger_number.csv', ['Passenger_length', 'number'], show=False)
 print()
 
 def make_hist(csv_in):
