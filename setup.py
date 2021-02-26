@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='stepRNA',
-    version='0.1.11',
+    version='1.1-beta',
     author='Ben Murcott',
     author_email='bmm41@bath.ac.uk',
     description='Align short RNA seqeuncing reads to determine the length of of overhang.',
@@ -13,11 +13,11 @@ setuptools.setup(name='stepRNA',
     url='https://github.com/bmm514/stepRNA.git',
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Licesnce :: OSI Approved :: MIT Licence",
-        "Operating System :: Ubuntu",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: Unix"
     ],
-    #packages=setuptools.find_packages(),
     license='MIT',
+    keywords=['Dicer', 'RNA', 'genomics', 'processing'],
     packages=["stepRNA"],
     python_requires=">=3.6",
     install_requires=[
@@ -26,8 +26,8 @@ setuptools.setup(name='stepRNA',
         "numpy>=1.20.1"
         ],
     scripts=["bin/stepRNA",
-    "stepRNA/stepRNA-run_bowtie.py",
-    "stepRNA/stepRNA-cigar_process.py"
+    "stepRNA/stepRNA_run_bowtie.py",
+    "stepRNA/stepRNA_cigar_process.py"
     ]
 )
 

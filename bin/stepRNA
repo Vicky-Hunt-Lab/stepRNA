@@ -17,9 +17,9 @@ from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, re
 #Scripts to be used...
 import stepRNA.remove_exact as remove_exact
 import stepRNA.make_unique as make_unique
-import stepRNA.stepRNA-run_bowtie as run_bowtie
+import stepRNA.stepRNA_run_bowtie as run_bowtie
 import stepRNA.index_bowtie as index_bowtie
-import stepRNA.stepRNA-cigar_process as cigar_process
+import stepRNA.stepRNA_cigar_process as cigar_process
 
 #Modules that need to be installed
 try:

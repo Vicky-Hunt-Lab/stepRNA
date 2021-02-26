@@ -21,3 +21,4 @@ Please report any issues to the stepRNA GitHub page or via email:
 
 - First public release
 - Caveats: Manual is still incomplete, untested on Windows
+- Features such as log file outputs still to be finalised

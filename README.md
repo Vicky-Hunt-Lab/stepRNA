@@ -20,9 +20,11 @@ In order for stepRNA to run you must have:
 - numpy >= v1.20.1 (autoamtically installed with pip)
 - pysam >= v0.16.0.1 (autoamtically installed with pip)
 
-**To install with pip:**
+**To install with pip (recommended):**
 
 ```pip install stepRNA```
+
+If this doesn't work due to non-root access issues see **Installing into a Virtual Environment**
 
 **To install from source:**
 
@@ -97,8 +99,12 @@ This will create a new direxotry called *stepRNA_example* that contains:
 
 Latest release notes:
 
-v1.0.0 (25/02/21):
-- v1 released
+**Version 1.0.0 - 25 Feb, 2020**
+
+- First public release (v1.0.0)
+- Caveats: Manual is still incomplete, untested on Windows
+- Features such as log file outputs still to be finalised
+
 
 See [NEWS](URL_LINK) for historical updates of release notes
 
