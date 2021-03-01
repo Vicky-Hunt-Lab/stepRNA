@@ -36,39 +36,37 @@ If this doesn't work due to non-root access issues see **Installing into a Virtu
 
 **To install from source:**
 
-1) Download stepRNA-X.X.X.tar.gz from PyPI_URL:
-2) Unzip it:
+1) Download [stepRNA-X.X.X.tar.gz](https://pypi.org/project/stepRNA/#files)
+2) Unzip it
+3) Move into stepRNA-X.X.X repository
+4) Run the installation
 
-```tar -xvzf stepRNA-X.X.X.tar.gz```
+```
+tar -xvzf stepRNA-X.X.X.tar.gz
 
-3) Move into stepRNA-X.X.X repository:
+cd stepRNA-X.X.X
 
-```cd stepRNA-X.X.X```
-
-4) Run the installation:
-
-```python3 setup.py install```
+python3 setup.py install
+```
 
 **Installing into a Virtual Environment**
 
 This can be useful if root privalages are not available to the user.
 
-1) Create a virutal environment:
+1) Create a virutal environment (recommend using virtualenv):
 
-We recommend using virtualenv
 ```pip install virtualenv```
 
 2) Create and activate the environment:
+3) Run the installation 
 
 ```
 virtualenv stepRNA_env
 
 source /stepRNA_env/bin/activate
+
+pip install stepRNA
 ```
-
-3) Install with pip:
-
-```pip install stepRNA```
 
 ## Use:
 
