@@ -1,10 +1,11 @@
 # stepRNA
-
+[![PyPI version](https://badge.fury.io/py/stepRNA.svg)](https://badge.fury.io/py/stepRNA)
 ## Overview
 
 stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA-seq query reads (passenger sequences) to reference sequences (siRNAs) and output information about the type and length of overhangs uncovered. It was originally developed for uncovering Dicer processing signatures but is not limited to just this.
 
 **Table of Contents:**
+- [Reporting Issues](#Reporting-Issues)
 - [Installation](#Installation)
 - [Use](#Use)
 - [Example](#Example)
@@ -61,6 +62,7 @@ We recommend using virtualenv
 
 ```
 virtualenv stepRNA_env
+
 source /stepRNA_env/bin/activate
 ```
 
