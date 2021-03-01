@@ -46,7 +46,7 @@ def write_to_bam(line, left_type, right_type, prefix):
     with open(prefix + '_' + left_type + '_' + right_type + '.bam', 'a+') as bam_out:
         bam_out.write(line.to_string() + '\n')
 
-def make_csv(dics, csv_name, headers, show=True):
+def make_csv(dics, csv_name, headers, logger, show=True):
     '''Make a csv continaing the overhang information
 
     dics [LST] - a list containingng the [right_dic, left_dic] order
@@ -73,9 +73,9 @@ def make_csv(dics, csv_name, headers, show=True):
                 dics[1][key] = 0
             writer.writerow([key, dics[1].get(key), dics[0].get(key)])
             if show:
-                print('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
+                logger.write('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
 
-def make_type_csv(dic, csv_name, headers, show=True, sort=False):
+def make_type_csv(dic, csv_name, headers, logger, show=True, sort=False):
     '''Make a csv from a dictionary with the keys forming the row infomration anthe values forming the count information 
 
     dic [DICT] - A dictionary containing key: count pairs
@@ -100,7 +100,7 @@ def make_type_csv(dic, csv_name, headers, show=True, sort=False):
         for key in keys:
             writer.writerow([key, dic[key]])
             if show:
-                print('{}\t{}'.format(key, dic[key]))
+                logger.write('{}\t{}'.format(key, dic[key]))
 
 def print_hist(density_dic, keys):
     '''Print a basic histogram to the terminal from a dictionary of density values
@@ -125,3 +125,4 @@ class Logger(object):
 
     def close(self):
         self.log.close()
+

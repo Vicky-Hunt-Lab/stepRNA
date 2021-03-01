@@ -28,6 +28,8 @@ def main(sorted_bam, filepath, write_json=False):
         refs_read_dic[name] = 0
     MakeBam_dic = defaultdict(lambda:None) 
     all_passed = MakeBam(samfile)
+
+
     for line in samfile:
             if line.cigarstring != None:
                 if ('D' or 'I') not in line.cigarstring:
@@ -52,21 +54,32 @@ def main(sorted_bam, filepath, write_json=False):
                         refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
                     except Exception:
                         continue
-    #directory = os.path.dirname(filepath)
-    #outdir = os.path.join(directory, 'AlignmentFiles')
     outdir = filepath + '_AlignmentFiles'
     check_dir(outdir)
     for key in MakeBam_dic:
         outfile = os.path.join(outdir, '{}_{}.bam'.format(os.path.basename(filepath), key))
         MakeBam_dic[key].save_to_file(outfile)
     all_passed.save_to_file(os.path.join(outdir, '{}_passed.bam'.format(os.path.basename(filepath))))
+    
+    #Process unqiue counts
+    right_unique_dic = defaultdict(lambda:0)
+    left_unique_dic = defaultdict(lambda:0)
+    fpath = os.path.join(outdir)
+    for f in os.listdir(fpath):
+        if 'passed' not in f:
+            key = int(f.split('_')[-2])
+            if '5prime' in f.split('_')[-3]:
+                left_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
+            if '3prime' in f.split('_')[-3]:
+                right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
+    #Store as jsons (if required)
     if write_json:
-        for dic in right_dic, left_dic, type_dic, read_len_dic, refs_read_dic:
+        for dic in right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic:
             #Needs to be sorted out!!!
             def write_to_json(dic, filepath, suffix):
                 with open(prefix + suffix, 'w') as fout:
                         json.dump(dic, fout)
-    return right_dic, left_dic, type_dic, read_len_dic, refs_read_dic
+    return right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic
 
 if __name__ == "__main__":
     from argparse import ArgumentParser, SUPPRESS
@@ -99,4 +112,4 @@ if __name__ == "__main__":
         prefix = os.path.splitext(sorted_bam)[0]
     else:
         prefix = args.prefix
-    right_dic, left_dic, type_dic, read_len_dic, refs_read_dic = main(sorted_bam, prefix, write_json)
+    right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic = main(sorted_bam, prefix, write_json)

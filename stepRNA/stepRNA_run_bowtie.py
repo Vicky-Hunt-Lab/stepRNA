@@ -17,10 +17,11 @@ def main(ref_base, reads, prefix, min_score, logger):
     sam_file = replace_ext(prefix, '.sam')
     command = ['bowtie2', '-x', ref_base, '-U', reads, '-f', '-N', '0', '-L', '10', '--no-1mm-upfront', '--nofw','--local', '--ma', '3', '--mp', '{},{}'.format(maximum, maximum), '--score-min', 'L,{},0'.format(min_score), '-S', sam_file]
     bowtie = run(command, stderr=PIPE)
-    logger.write('Alignment statistics (from Bowtie2):')
+    logger.write('Alignment statistics (from Bowtie2):\n')
     logger.write(bowtie.stderr.decode('utf-8'))
+    logger.write('Alignment complete')
     #Convert sam to bam...
-    sorted_bam = sam_to_bam(sam_file)
+    sorted_bam = sam_to_bam(sam_file, logger)
     return sorted_bam
 
 if __name__ == "__main__":

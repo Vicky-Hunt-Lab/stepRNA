@@ -1,4 +1,5 @@
-#Python default modules
+#Installed Modules
+import pysam
 
 def left_overhang(sorted_bam, line, ref_positions):
     '''Get the length of the left overhang; 0 = no overhang, -ve = reference overhang, +ive = query overhang
@@ -8,15 +9,17 @@ def left_overhang(sorted_bam, line, ref_positions):
     ref_positions [PYSAM_Record_RefPos] - a pysam.AlignmentFile record.get_reference_positions()
     
     Returns: The length of the left overhang and the type of overhang'''
+    #Look at alignment list to determine the overhang
     if ref_positions[0] == 0:
         return 0, '5primeExact'
     elif ref_positions[0] == None:
         if line.reference_start != 0:
+            #Softclipping isn't in the correct place
+            #Alignment doesn't 'overhang' reference or query   
             raise Exception
-        else:
+        else:   
             return line.query_alignment_start, '5primeRead'
-    else:
-        #If reference_position[0] > 0
+    else: #If reference_position[0] > 0
         return -ref_positions[0], '5primeRef'
 
 def right_overhang(sorted_bam, line, ref_positions):
@@ -27,6 +30,7 @@ def right_overhang(sorted_bam, line, ref_positions):
     ref_positions [PYSAM_Record_RefPos] - a pysam.AlignmentFile record.get_reference_positions()
     
     Returns: The length of the left overhang and the type of overhang'''
+    #Look at alignment list to determine the overhang
     ref_length = sorted_bam.lengths[sorted_bam.get_tid(line.reference_name)]
     if ref_positions[-1] == ref_length - 1:
         return 0, '3primeExact'
@@ -35,9 +39,6 @@ def right_overhang(sorted_bam, line, ref_positions):
            raise Exception
         else:
             return ref_length - line.query_alignment_length , '3primeRead'
-            #return ref_length - line.query_length, 'RQ'
     else:
         #If reference_position[-1] < ref_length
         return ref_positions[-1] - (ref_length - 1), '3primeRef'
-
-
