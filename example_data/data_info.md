@@ -9,7 +9,7 @@ The files contained within this directory include:
 
 ## Aquisition and Processing
 
-1) Wild-Type Embryo Data Table (Sample ID: [GSM801363](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM801363)) was downloaded from GEO Accession Number: [GSE32336](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE32366) as *GSM801363-2802.txt*
+1) Wild-Type Embryo Data Table (Sample ID: [GSM801363](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM801363)); GEO Accession Number: [GSE32336](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE32366) was downloaded as *GSM801363-2802.txt*
 
 The table has been processed according to [Fischer et al. (2011)](https://pubmed.ncbi.nlm.nih.gov/22102828/) and contains unique sequences and counts obtained from the FASTQ seqeunceing file (filtered for Q>20)
 
