@@ -18,15 +18,15 @@ The table has been processed according to [Fischer et al. (2011)](https://pubmed
 ```
 tail -n +4 GSM801363-2802.txt > GSM801363_WTembryo.txt 
 
-awk '{print ">" NR; print $0}' GSM801363_WTembryo.txt > GSM801363_rawseqs_WTembryo.txt 
+awk '{print ">" NR; print $0}' GSM801363_WTembryo.txt > GSM801363_rawseqs_WTembryo.fa 
 ```
 
 3) Length filtering was performed with the [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) script, TBr2_length-filter.pl, from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
 
 ```
-perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.txt -o LF_embryo.fa -min 15 -max 30
-perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.txt -o 26_embryo.fa -min 26 -max 26
-perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.txt -o 22_embryo.fa -min 22 -max 22
+perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.fa -o LF_embryo.fa -min 15 -max 30
+perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.fa -o 26_embryo.fa -min 26 -max 26
+perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.fa -o 22_embryo.fa -min 22 -max 22
 ```
 
 4) 22G and 26G seqeunces were then selected using GREP
