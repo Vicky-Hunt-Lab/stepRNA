@@ -29,7 +29,6 @@ def main(sorted_bam, filepath, write_json=False):
     MakeBam_dic = defaultdict(lambda:None) 
     all_passed = MakeBam(samfile)
 
-
     for line in samfile:
             if line.cigarstring != None:
                 if ('D' or 'I') not in line.cigarstring:

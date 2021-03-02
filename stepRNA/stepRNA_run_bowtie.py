@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+import os
+from subprocess import run, PIPE
+
 from stepRNA.processing import sam_to_bam
 from stepRNA.general import mini_maxi, replace_ext, check_dir
-from subprocess import run, PIPE
-import os
+from stepRNA.output import Logger
 
 
 def main(ref_base, reads, prefix, min_score, logger):
@@ -62,7 +64,6 @@ if __name__ == "__main__":
         filename = args.name
     #Join together output directory and filename to make a prefix...
     prefix = os.path.join(outdir, filename)
+    logger = Logger(prefix + '_output.log')
     #Run main script
-    main(ref_base, reads, prefix, min_score)
-
-
+    main(ref_base, reads, prefix, min_score, logger)
