@@ -105,16 +105,16 @@ Latest release notes:
 - Features such as log file outputs still to be finalised
 
 
-See [NEWS](URL_LINK) for historical updates of release notes
+See [NEWS](https://github.com/bmm514/stepRNA/blob/master/NEWS) for historical updates of release notes
 
 ## Licence
 
-stepRNA is licensed under the MIT license.  See [LICENSE](URL_LINK) file for details.
+stepRNA is licensed under the MIT license.  See [LICENSE](https://github.com/bmm514/stepRNA/blob/master/LICENSE) file for details.
 
 ## Additional Information
 
 For more information:
-- Go to [FAQs](URL_LINK) to see commonly asked quesitons
+- Go to [FAQs](https://github.com/bmm514/stepRNA/blob/master/FAQs) to see commonly asked quesitons
 - Loo at the [USER MANUAL](URL_LINK) to see detailed instructions and all of the available options
 
 If you use stepRNA in your work please cite:
