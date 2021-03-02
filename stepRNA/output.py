@@ -65,7 +65,7 @@ def make_csv(dics, csv_name, headers, logger, show=True):
         writer = csv.writer(csv_out, delimiter=',')
         writer.writerow(headers)
         if show:
-            print('\t'.join(headers))
+            logger.write('\t'.join(headers))
         for key in keys:
             if dics[0][key] == None:
                 dics[0][key] = 0
@@ -96,13 +96,13 @@ def make_type_csv(dic, csv_name, headers, logger, show=True, sort=False):
         writer = csv.writer(csv_out, delimiter = ',')
         writer.writerow(headers)
         if show:
-            print('\t'.join(headers))
+            logger.write('\t'.join(headers))
         for key in keys:
             writer.writerow([key, dic[key]])
             if show:
                 logger.write('{}\t{}'.format(key, dic[key]))
 
-def print_hist(density_dic, keys):
+def print_hist(density_dic, keys, logger):
     '''Print a basic histogram to the terminal from a dictionary of density values
     
     density_dic [DIC] - a dictionary containing key: density pairs
@@ -110,9 +110,9 @@ def print_hist(density_dic, keys):
     for item in range(len(density_dic)):
         try:
             length = int(density_dic[item]) * '.'
-            print('{}\t| {}'.format(keys[item], length))
+            logger.write('{}\t| {}'.format(keys[item], length))
         except ValueError:
-            print('{}\t{}'.format(keys[item], ''))
+            logger.write('{}\t{}'.format(keys[item], ''))
 
 class Logger(object):
     def __init__(self, filename):

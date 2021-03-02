@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#i!/usr/bin/env python3
 
 #Python Modules
 import numpy as np
@@ -73,7 +73,7 @@ args = parser.parse_args()
 ref = args.reference
 reads = args.reads
 min_score = args.min_score
-outdir = check_dir(args.directory)
+outdir = check_dir(args.directory, show=False)
 if args.name is None:
     filename = os.path.splitext(reads)[0]
 else:
@@ -81,8 +81,9 @@ else:
 
 #Join together output directory and filename to make a prefix...
 prefix = os.path.join(outdir, os.path.basename(filename))
+
 logger = Logger(prefix + '.log')
-logger.write('\n##########')
+logger.write('##########')
 logger.write('Starting stepRNA on: \n{}\n{}\n'.format(os.path.basename(ref), os.path.basename(reads)))
 logger.write('Output to: {}'.format(outdir))
 
@@ -117,6 +118,7 @@ logger.write('Aligning...')
 sorted_bam = run_bowtie.main(ref_base, reads, prefix, min_score, logger)
 
 #Cigar process...
+logger.write('\n')
 fpath = os.path.join(outdir, prefix + '_AlignmentFiles')
 if os.path.isdir(fpath):
     logger.write('Removing contents in {}'.format(fpath))
@@ -153,7 +155,7 @@ logger.write('\n## Read lengths ##')
 make_type_csv(read_len_dic, prefix + '_passenger_length.csv', ['sRNA_read', 'passenger_count'], logger,sort=True)
 make_type_csv(refs_read_dic, prefix + '_passenger_number.csv', ['Passenger_length', 'number'], logger, show=False)
 logger.write('\n')
-def make_hist(csv_in):
+def make_hist(csv_in, logger):
     with open(csv_in) as summary:
         left_dens = []
         right_dens = []
@@ -176,12 +178,12 @@ def make_hist(csv_in):
         
     #Print histogram of overhangs to terminal...
     logger.write('LHS Overhang Histogram')
-    print_hist(left_dens, keys)
+    print_hist(left_dens, keys, logger)
 
     logger.write('RHS Overhang Histogram')
-    print_hist(right_dens, keys)
+    print_hist(right_dens, keys, logger)
 
 logger.write('\nAll aligned reads')
-make_hist(prefix + '_overhang.csv')
+make_hist(prefix + '_overhang.csv', logger)
 logger.write('\nUnique aligned reads')
-make_hist(prefix + '_unique_overhang.csv')
+make_hist(prefix + '_unique_overhang.csv', logger)

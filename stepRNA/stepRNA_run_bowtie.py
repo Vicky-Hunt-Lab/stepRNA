@@ -19,7 +19,7 @@ def main(ref_base, reads, prefix, min_score, logger):
     bowtie = run(command, stderr=PIPE)
     logger.write('Alignment statistics (from Bowtie2):\n')
     logger.write(bowtie.stderr.decode('utf-8'))
-    logger.write('Alignment complete')
+    logger.write('Alignment complete\n')
     #Convert sam to bam...
     sorted_bam = sam_to_bam(sam_file, logger)
     return sorted_bam

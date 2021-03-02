@@ -12,16 +12,19 @@ except ImportError:
     sys.exit(1)
 
 
-def check_dir(path):
+def check_dir(path, show=True):
     '''Check whether the directory specified is present. Create one if not.'''
     if os.path.isdir(path):
-        print('Files being outputted to: {}'.format(os.path.abspath(path)))
+        if show:
+            print('Files being outputted to: {}'.format(os.path.abspath(path)))
     else:
         try:
             os.mkdir(os.path.relpath(path))
-            print('Created directory: {}'.format(os.path.abspath(path)))
+            if show:
+                print('Created directory: {}'.format(os.path.abspath(path)))
         except FileNotFoundError:
-            print('Something went wrong when making the directory\n \
+            if show:
+                print('Something went wrong when making the directory\n \
 Are you sure it is a valid path entered?')
             sys.exit(1)
     return os.path.abspath(path)

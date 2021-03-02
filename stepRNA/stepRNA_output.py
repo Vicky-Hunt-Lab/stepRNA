@@ -11,10 +11,10 @@ def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_uniqu
     logger.write('\n## Overhang types ##')
     make_type_csv(type_dic, prefix + '_overhang_type.csv', ['Classification', 'count'], logger, show=True, sort=False)
     logger.write('\n## Read lengths ##')
-    make_type_csv(read_len_dic, prefix + '_passenger_length.csv', ['sRNA_read', 'passenger_count'], logger,sort=True)
+    make_type_csv(read_len_dic, prefix + '_passenger_length.csv', ['passenger_length', 'passenger_count'], logger,sort=True)
     make_type_csv(refs_read_dic, prefix + '_passenger_number.csv', ['Passenger_length', 'number'], logger, show=False)
     logger.write('\n')
-    def make_hist(csv_in):
+    def make_hist(csv_in, logger):
         with open(csv_in) as summary:
             left_dens = []
             right_dens = []
@@ -36,12 +36,12 @@ def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_uniqu
 
         #Print histogram of overhangs to terminal...
         logger.write('LHS Overhang Histogram')
-        print_hist(left_dens, keys)
+        print_hist(left_dens, keys, logger)
 
         logger.write('RHS Overhang Histogram')
-        print_hist(right_dens, keys)
+        print_hist(right_dens, keys, logger)
 
     logger.write('\nAll aligned reads')
-    make_hist(prefix + '_overhang.csv')
+    make_hist(prefix + '_overhang.csv', logger)
     logger.write('\nUnique aligned reads')
-    make_hist(prefix + '_unique_overhang.csv')
+    make_hist(prefix + '_unique_overhang.csv', logger)
