@@ -17,18 +17,20 @@ The table has been processed according to [Fischer et al., 2011](https://pubmed.
 
 ```
 tail -n +4 GSM801363-2802.txt > GSM801363_WTembryo.txt 
+
 awk '{print ">" NR; print $0}' GSM801363_WTembryo.txt > GSM801363_rawseqs_WTembryo.txt 
 ```
 
-3) Length filtering was performed with a [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) script: TBr2_length-filter.pl
+3) Length filtering was performed with a [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) script, TBr2_length-filter.pl, from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
 
 ```
-perl TBr2_length-filter.pl -i GSM801363_WTembryo.txt -o LF_embryo.fa -min 15 -max 30
-perl TBr2_length-filter.pl -i GSM801363_WTembryo.txt -o 26G_embryo.fa -min 26 -max 26
-perl TBr2_length-filter.pl -i GSM801363_WTembryo.txt -o 22G_embryo.fa -min 22 -max 22
+perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.txt -o LF_embryo.fa -min 15 -max 30
+perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.txt -o 26_embryo.fa -min 26 -max 26
+perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.txt -o 22_embryo.fa -min 22 -max 22
 ```
 
 4) 22G and 26G seqeunces were then selected using GREP
 ```
-grep '^G' -B 1 fileXXX.fa | sed '/--/d' > new_fileXXX.fa
+grep '^G' -B 1 26_embryo.fa | sed '/--/d' > 26G_embryo.fa
+grep '^G' -B 1 22_embryo.fa | sed '/--/d' > 22G_embryo.fa
 ```
