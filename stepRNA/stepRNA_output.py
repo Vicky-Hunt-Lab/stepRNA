@@ -49,4 +49,4 @@ def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_uniqu
 
 if __name__ == "__main__":
 #Setup argparse with input of JSON dicts and create a logger
-    main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, r    ight_unique_dic, left_unique_dic, prefix, logger)
+    main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic, prefix, logger)

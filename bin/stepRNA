@@ -11,9 +11,6 @@ import csv
 #Modules from this package
 from stepRNA.general import mini_maxi, replace_ext, check_dir
 from stepRNA.output import Logger
-#from stepRNA.processing import make_unique, rm_ref_matches
-#from stepRNA.commands import left_overhang, right_overhang
-#from stepRNA.output import make_csv, make_type_csv, write_to_bam, print_hist, refs_counts, Logger
 
 #Scripts to be used...
 import stepRNA.remove_exact as remove_exact
@@ -56,16 +53,12 @@ optional.add_argument(
 
 required.add_argument('-r', '--reference', help='Path to the reference seqeunces', required=True)
 required.add_argument('-q', '--reads', help='Path to the read sequences', required=True)
-optional.add_argument('-n', '--name',  help='Prefix for the output files')
-optional.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files')
-optional.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept, default is the shortest read length')
+optional.add_argument('-n', '--name',  help='Prefix for the output files. Default is the --reads basename')
+optional.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files. Default is the current directory')
+optional.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept. Default is the shortest read length')
 flags.add_argument('-e', '--remove_exact', action='store_true', help='Remove exact read matches to the reference sequence')
-flags.add_argument('-u', '--make_unique', action='store_true', help='Make FASTA headers unique in reference and reads i.e. >Read_1 >Read_2')
-flags.add_argument('-j', '--write_json', action='store_true', help='Write count dictionaries to a JSON file')
+flags.add_argument('-u', '--make_unique', action='store_true', help='Make FASTA headers unique in reference and reads i.e. >Ref_1 and >Read_1')
 flags.add_argument('-V', '--version', action='version', version='stepRNA v1.0.0', help='Print version number then exit.')
-
-#parser._action_groups.append(optional)
-#parser._action_groups.append(flags)
 
 args = parser.parse_args()
 
@@ -136,54 +129,9 @@ type_dic, \
 read_len_dic, \
 refs_read_dic, \
 right_unique_dic, \
-left_unique_dic = cigar_process.main(sorted_bam, prefix, args.write_json)
+left_unique_dic = cigar_process.main(sorted_bam, prefix)
 logger.write('Cigar strings processed')
 
 #Put overhangs infomation into a csv and print to terminal...
 logger.write('\n##########')
 make_output.main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic, prefix, logger)
-sys.exit(0)
-
-logger.write('\n#### Summary Tables ####')
-logger.write('\n## Overhang counts ##')
-make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['Overhang','5prime','3prime'], logger, show=True)
-logger.write('\n## Unique overhang counts ##')
-make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['Overhang','3prime','5prime'], logger, show=True)
-logger.write('\n## Overhang types ##')
-make_type_csv(type_dic, prefix + '_overhang_type.csv', ['Classification', 'count'], logger, show=True, sort=False)
-logger.write('\n## Read lengths ##')
-make_type_csv(read_len_dic, prefix + '_passenger_length.csv', ['sRNA_read', 'passenger_count'], logger,sort=True)
-make_type_csv(refs_read_dic, prefix + '_passenger_number.csv', ['Passenger_length', 'number'], logger, show=False)
-logger.write('\n')
-def make_hist(csv_in, logger):
-    with open(csv_in) as summary:
-        left_dens = []
-        right_dens = []
-        left_tot = 0
-        right_tot = 0
-        keys = []
-        csv_reader = csv.reader(summary, delimiter=',')
-        head = next(csv_reader)
-        for line in csv_reader:
-            keys.append(line[0])
-            left_dens.append(int(line[1]))
-            left_tot += int(line[1])
-            right_dens.append(int(line[2]))
-            right_tot += int(line[2])
-
-
-    for key in range(len(keys)):
-        left_dens[key] = 100 * left_dens[key] / left_tot
-        right_dens[key] = 100 * right_dens[key] / right_tot
-        
-    #Print histogram of overhangs to terminal...
-    logger.write('LHS Overhang Histogram')
-    print_hist(left_dens, keys, logger)
-
-    logger.write('RHS Overhang Histogram')
-    print_hist(right_dens, keys, logger)
-
-logger.write('\nAll aligned reads')
-make_hist(prefix + '_overhang.csv', logger)
-logger.write('\nUnique aligned reads')
-make_hist(prefix + '_unique_overhang.csv', logger)

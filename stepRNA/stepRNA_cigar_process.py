@@ -4,15 +4,15 @@ from collections import defaultdict
 import json
 import os
 
+import pysam
+
 from stepRNA.processing import MakeBam
 from stepRNA.commands import left_overhang, right_overhang
 from stepRNA.general import check_dir
 from stepRNA.output import refs_counts
+import stepRNA.stepRNA_output as make_output
 
-import pysam
-
-
-def main(sorted_bam, filepath, write_json=False):
+def main(sorted_bam, filepath):
     '''Process CIGAR strings.
 
     sorted_bam [STR] - path to a sorted BAM file
@@ -71,13 +71,7 @@ def main(sorted_bam, filepath, write_json=False):
                 left_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
             if '3prime' in f.split('_')[-3]:
                 right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
-    #Store as jsons (if required)
-    if write_json:
-        for dic in right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic:
-            #Needs to be sorted out!!!
-            def write_to_json(dic, filepath, suffix):
-                with open(prefix + suffix, 'w') as fout:
-                        json.dump(dic, fout)
+
     return right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic
 
 if __name__ == "__main__":
@@ -101,14 +95,12 @@ if __name__ == "__main__":
     required.add_argument('--bamfile', '-b', help='Path to a sorted BAMfile', required=True)
     optional.add_argument('--prefix', '-p', help='Prefix to add to the file. Default is file basename')
 
-    flags.add_argument('--write_json', '-j', action='store_true' , help='Write counts dictionaries to JSON files')
-
     args = parser.parse_args()
 
     sorted_bam = args.bamfile
-    write_json = args.write_json
     if args.prefix is None:
         prefix = os.path.splitext(sorted_bam)[0]
     else:
         prefix = args.prefix
-    right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic = main(sorted_bam, prefix, write_json)
+    right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic = main(sorted_bam, prefix)
+    make_output.main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic, prefix, logger)

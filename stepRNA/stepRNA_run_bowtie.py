@@ -44,14 +44,13 @@ if __name__ == "__main__":
         help='show this help message and exit'
     )
     #Add required arguments...
-    required.add_argument('--ref_base', '-r', help='Bowtie-build reference basename')
-    required.add_argument('--reads', '-q', help='Reads to align to the reference')
+    required.add_argument('--ref_base', '-r', help='Bowtie-build reference basename', required=True)
+    required.add_argument('--reads', '-q', help='Reads to align to the reference', required=True)
     #Add optional arugments...
     optional.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept, default is the shortest read length')
     optional.add_argument('-n', '--name',  help='Prefix for the output files')
     optional.add_argument('-d', '--directory', default = os.curdir, help='Directory to store the output files')
 
-    parser._action_groups.append(optional)
     args = parser.parse_args()
 
     ref_base = args.ref_base
