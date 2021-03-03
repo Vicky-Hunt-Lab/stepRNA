@@ -98,12 +98,11 @@ See the [MANUAL](URL_LINK) for more information
 
 Latest release notes:
 
-**Version 1.0.0 - 25 Feb, 2020**
+**Version 1.0.0 - 3 Mar, 2021**
 
-- First public release (v1.0.0)
-- Caveats: Manual is still incomplete, untested on Windows
-- Features such as log file outputs still to be finalised
-
+- Version 1.0.0 official release
+- Manuscript available: [Murcott, Pawluk & Hunt (2021)](URL_LINK)
+- README.md complete; Full manual still to be added
 
 See [NEWS](https://github.com/bmm514/stepRNA/blob/master/NEWS.md) for historical updates of release notes
 
