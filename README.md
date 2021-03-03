@@ -17,7 +17,7 @@ stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA
 
 Please report any issues to the stepRNA GitHub page or via email:
 - https://github.com/bmm514/stepRNA/issues
-- benmurcott96@gmail.com (Ben Murcott)
+- benmurcott96@gmail.com or bmm41@bath.ac.uk (Ben Murcott)
 - v.l.hunt@bath.ac.uk (Vicky Hunt)
 
 ## Installation
@@ -36,15 +36,15 @@ If this doesn't work due to non-root access issues see **Installing into a Virtu
 
 **To install from source:**
 
-1) Download [stepRNA-X.X.X.tar.gz](https://pypi.org/project/stepRNA/#files)
+1) Download [stepRNA-1.0.0.tar.gz](https://pypi.org/project/stepRNA/#files)
 2) Unzip it
-3) Move into stepRNA-X.X.X repository
+3) Move into stepRNA-1.0.0 repository
 4) Run the installation
 
 ```
-tar -xvzf stepRNA-X.X.X.tar.gz
+tar -xvzf stepRNA-1.0.0.tar.gz
 
-cd stepRNA-X.X.X
+cd stepRNA-1.0.0
 
 python3 setup.py install
 ```
