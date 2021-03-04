@@ -23,10 +23,10 @@ def make_hist(csv_in, logger):
         right_dens[key] = 100 * right_dens[key] / right_tot
 
     #Print histogram of overhangs to terminal...
-    logger.write('LHS Overhang Histogram')
+    logger.write('5\' Overhang Histogram')
     print_hist(left_dens, keys, logger)
 
-    logger.write('RHS Overhang Histogram')
+    logger.write('3\' Overhang Histogram')
     print_hist(right_dens, keys, logger)
 
 def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic, prefix, logger):
@@ -34,7 +34,7 @@ def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_uniqu
     logger.write('\n## Overhang counts ##')
     make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['Overhang','5prime','3prime'], logger, show=True)
     logger.write('\n## Unique overhang counts ##')
-    make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['Overhang','3prime','5prime'], logger, show=True)
+    make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['Overhang','5prime','3prime'], logger, show=True)
     logger.write('\n## Overhang types ##')
     make_type_csv(type_dic, prefix + '_overhang_type.csv', ['Classification', 'count'], logger, show=True, sort=False)
     logger.write('\n## Read lengths ##')
