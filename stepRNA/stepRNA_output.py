@@ -23,10 +23,10 @@ def make_hist(csv_in, logger):
         right_dens[key] = 100 * right_dens[key] / right_tot
 
     #Print histogram of overhangs to terminal...
-    logger.write('LHS Overhang Histogram')
+    logger.write('5\' Overhang Histogram')
     print_hist(left_dens, keys, logger)
 
-    logger.write('RHS Overhang Histogram')
+    logger.write('3\' Overhang Histogram')
     print_hist(right_dens, keys, logger)
 
 def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic, prefix, logger):
