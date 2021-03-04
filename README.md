@@ -100,11 +100,10 @@ See the [MANUAL](URL_LINK) for more information
 
 Latest release notes:
 
-**Version 1.0.0 - 3 Mar, 2021**
+**Version 1.0.1 - 4 Mar, 2021**
 
-- Version 1.0.0 official release
-- Manuscript available: [Murcott, Pawluk & Hunt (2021)](URL_LINK)
-- README.md complete; Full manual still to be added
+- Fixing a probelm with underhang length calculation
+- Full Manual still to be added
 
 See [NEWS](https://github.com/bmm514/stepRNA/blob/master/NEWS.md) for historical updates of release notes
 
