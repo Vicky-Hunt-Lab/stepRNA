@@ -30,12 +30,18 @@ def main(sorted_bam, filepath):
     all_passed = MakeBam(samfile)
 
     for line in samfile:
+            print('##################')
+            print('TTACACATAC')
+            print(line.query_sequence)
             if line.cigarstring != None:
                 if ('D' or 'I') not in line.cigarstring:
                     ref_pos = line.get_reference_positions(full_length = True)
+                    print('######')
+                    print(ref_pos)
                     try:
                         right, right_type = right_overhang(samfile, line, ref_pos)
                         left, left_type = left_overhang(samfile, line, ref_pos)
+                        print(left, right)
                         #Add to MakeBam
                         def add_to_MakeBam(dic, length, additional, record):
                             length =  additional + '_' + str(length) 
