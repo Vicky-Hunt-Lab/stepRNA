@@ -100,10 +100,10 @@ See the [MANUAL](URL_LINK) for more information
 
 Latest release notes:
 
-**Version 1.0.1 - 4 Mar, 2021**
+**Version 1.0.2 - 4 Mar, 2021**
 
-- Fixing a probelm with underhang length calculation
-- Full Manual still to be added
+- Fixing upload issue from v1.0.1
+- Full manual still to be added
 
 See [NEWS](https://github.com/bmm514/stepRNA/blob/master/NEWS.md) for historical updates of release notes
 
@@ -115,7 +115,7 @@ stepRNA is licensed under the MIT license.  See [LICENSE](https://github.com/bmm
 
 For more information:
 - Go to [FAQs](https://github.com/bmm514/stepRNA/blob/master/FAQs.md) to see commonly asked quesitons
-- Loo at the [USER MANUAL](URL_LINK) to see detailed instructions and all of the available options
+- Look at the [USER MANUAL](URL_LINK) to see detailed instructions and all of the available options
 
 If you use stepRNA in your work please cite:
 
