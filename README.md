@@ -34,6 +34,12 @@ In order for stepRNA to run you must have:
 
 ```pip install stepRNA```
 
+
+**To upgrade to v1.0.2**
+
+```pip install --upgrade stepRNA```
+
+
 If this doesn't work due to non-root access issues see **Installing into a Virtual Environment**
 
 **To install from source:**
