@@ -92,9 +92,9 @@ Helpful options:
 
 ## Example:
 
-Using the reads from stepRNA/example_data:
+Using the reads from stepRNA/example_data/experimental_data:
 
-```stepRNA --reference stepRNA/example_data/26G_embryo.fa --reads stepRNA/example_data/LF_embryo.fa --directory stepRNA_example```
+```stepRNA --reference stepRNA/example_data/experimental_data/26G_embryo.fa --reads stepRNA/example_data/experimental_data/LF_embryo.fa --directory stepRNA_example```
 
 This will create a new direcotry called *stepRNA_example* that contains:
 - LF_embryo_AligmentFile/; a directory containing BAM files for each of the overhang lengths
