@@ -6,7 +6,7 @@ stepRNA is available for download at:
 
 v1.b0 is the first version released to the public, v1.0.3 is the latest version.  
 
-stepRNA is licensed under the MIT license.  See [LICENSE](https://github.com/bmm514/stepRNA/blob/master/LICENSE) file for details.
+stepRNA is licensed under the MIT license.  See [LICENSE](./LICENSE) file for details.
 
 ## Reporting Issues
 
@@ -19,7 +19,7 @@ Please report any issues to the stepRNA GitHub page or via email:
 
 **Version 1.0.3 - 8 Mar, 2021**
 
-- Updating header in passenger_number.csv to siRNA_sequene
+- Updating header in passenger_number.csv to siRNA_sequence
 - Full manual still to be added
 
 **Version 1.0.2 - 4 Mar, 2021**

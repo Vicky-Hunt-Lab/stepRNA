@@ -111,16 +111,16 @@ Latest release notes:
 - Updating header in passenger_number.csv to siRNA_sequene
 - Full manual still to be added
 
-See [NEWS](https://github.com/bmm514/stepRNA/blob/master/NEWS.md) for historical updates of release notes
+See [NEWS](./NEWS.md) for historical updates of release notes
 
 ## Licence
 
-stepRNA is licensed under the MIT license.  See [LICENSE](https://github.com/bmm514/stepRNA/blob/master/LICENSE) file for details.
+stepRNA is licensed under the MIT license.  See [LICENSE](./LICENSE) file for details.
 
 ## Additional Information
 
 For more information:
-- Go to [FAQs](https://github.com/bmm514/stepRNA/blob/master/FAQs.md) to see commonly asked quesitons
+- Go to [FAQs](./FAQs.md) to see commonly asked quesitons
 - Look at the [USER MANUAL](URL_LINK) to see detailed instructions and all of the available options
 
 If you use stepRNA in your work please cite:
