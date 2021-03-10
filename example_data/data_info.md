@@ -48,6 +48,6 @@ grep '^G' -B 1 22_embryo.fa | sed '/--/d' > 22G_embryo.fa
 The files contained within ```simulated_data/``` include:
 - *ref.fasta*; referece sequence (row 1 in *alignment.csv*)
 - *reads.fasta*; query sequences (rows 2-29 in *alignment.csv*)
-- *alignment.csv*; a visual alignment of how the reads align to the genome
+- [*alignment.pdf*](./simulated_data/alignment.pdf); a visual alignment of how the reads align to the genome
 
 These can be run to test that stepRNA is working on your system and provide a small dataset to help understand the output.
