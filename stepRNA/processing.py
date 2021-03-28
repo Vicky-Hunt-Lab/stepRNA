@@ -26,7 +26,7 @@ def sam_to_bam(sam_file, logger):
     infile.close()
     outfile.close()
     try:
-        pysam.view('-bS', '-o', sorted_bam, sam_file, catch_stdout=False)
+        pysam.view('-bS', '-F', '4', '-o', sorted_bam, sam_file, catch_stdout=False)
         pysam.sort('-o', sorted_bam, sorted_bam)
         pysam.index(sorted_bam)
         os.remove(sam_file)
