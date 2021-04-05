@@ -31,10 +31,13 @@ def make_hist(csv_in, logger):
 
 def main(right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic, prefix, logger):
     logger.write('\n#### Summary Tables ####')
+######
+#Needs changing for logodds
     logger.write('\n## Overhang counts ##')
     make_csv([right_dic, left_dic], prefix + '_overhang.csv', ['Overhang','5prime','3prime'], logger, show=True)
     logger.write('\n## Unique overhang counts ##')
     make_csv([right_unique_dic, left_unique_dic], prefix + '_unique_overhang.csv', ['Overhang','5prime','3prime'], logger, show=True)
+######
     logger.write('\n## Overhang types ##')
     make_type_csv(type_dic, prefix + '_overhang_type.csv', ['Classification', 'count'], logger, show=True, sort=False)
     logger.write('\n## Read lengths ##')

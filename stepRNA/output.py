@@ -2,6 +2,7 @@
 import csv
 import pysam
 from collections import defaultdict
+import numpy as np
 import sys
 
 def refs_counts(bamfile, unique=False):
@@ -46,6 +47,7 @@ def write_to_bam(line, left_type, right_type, prefix):
     with open(prefix + '_' + left_type + '_' + right_type + '.bam', 'a+') as bam_out:
         bam_out.write(line.to_string() + '\n')
 
+#Needs changing for logodds
 def make_csv(dics, csv_name, headers, logger, show=True):
     '''Make a csv continaing the overhang information
 
@@ -68,12 +70,14 @@ def make_csv(dics, csv_name, headers, logger, show=True):
             logger.write('\t'.join(headers))
         for key in keys:
             if dics[0][key] == None:
-                dics[0][key] = 0
+                dics[0][key] = [0,'NA', 'NA']
             if dics[1][key] == None:
-                dics[1][key] = 0
-            writer.writerow([key, dics[1].get(key), dics[0].get(key)])
+                dics[1][key] = [0, 'NA', 'NA']
+            fiveprime = dics[1].get(key)
+            threeprime = dics[0].get(key)
+            writer.writerow([key, fiveprime[0], threeprime[0], fiveprime[1], threeprime[1], fiveprime[2], threeprime[2]])
             if show:
-                logger.write('{}\t{}\t{}'.format(key, dics[1].get(key), dics[0].get(key)))
+                logger.write('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(key, fiveprime[0], threeprime[0], fiveprime[1], threeprime[1], fiveprime[2], threeprime[2]))
 
 def make_type_csv(dic, csv_name, headers, logger, show=True, sort=False):
     '''Make a csv from a dictionary with the keys forming the row infomration anthe values forming the count information 
@@ -125,4 +129,30 @@ class Logger(object):
 
     def close(self):
         self.log.close()
+
+def oddsratio(counts):
+    '''Input is a oh_length : count dictionary; output is a oh_length : [count, logodds, zscore] dictionary'''
+    total = 0
+    est_std = 0
+    for key in counts:
+        total += counts[key]
+        est_std += 1 / counts[key]
+    est_std = np.sqrt(est_std)
+    xbar = total / len(counts)
+
+    outdictionary = {}
+    for key in counts:
+        phit = counts[key] / total
+        qhit = 1 - phit
+        poff = xbar / total
+        qoff = 1 - poff
+
+        count = counts[key]
+        odds = (phit / qhit) / (poff / qoff)
+        logodds = np.log(odds)
+        zscore = logodds / est_std
+
+        outdictionary[key] = [count, logodds, zscore]
+
+    return outdictionary
 

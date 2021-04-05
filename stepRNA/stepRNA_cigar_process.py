@@ -9,7 +9,7 @@ import pysam
 from stepRNA.processing import MakeBam
 from stepRNA.commands import left_overhang, right_overhang
 from stepRNA.general import check_dir
-from stepRNA.output import refs_counts
+from stepRNA.output import refs_counts, oddsratio
 import stepRNA.stepRNA_output as make_output
 
 def main(sorted_bam, filepath):
@@ -31,7 +31,7 @@ def main(sorted_bam, filepath):
     reads_processed = 0
 
     for line in samfile:
-        if reads_processed % 1000 == 0:
+        if reads_processed % 10 == 0:
             print('{} reads processed.'.format(reads_processed))
         if ('D' or 'I') not in line.cigarstring:
             ref_pos = line.get_reference_positions(full_length = True)
@@ -75,6 +75,12 @@ def main(sorted_bam, filepath):
             if '3prime' in f.split('_')[-3]:
                 right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
 
+    #Calcualte logodds for right_dic, left_dic, right_unique_dic, left_unique_dic
+    right_dic = oddsratio(right_dic)
+    left_dic = oddsratio(left_dic)
+    right_unique_dic = oddsratio(right_unique_dic)
+    left_unique_dic = oddsratio(left_unique_dic)
+
     return right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic
 
 if __name__ == "__main__":
@@ -101,6 +107,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     sorted_bam = args.bamfile
+    logger = ''
     if args.prefix is None:
         prefix = os.path.splitext(sorted_bam)[0]
     else:
