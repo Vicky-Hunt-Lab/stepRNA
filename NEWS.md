@@ -4,7 +4,7 @@ stepRNA is available for download at:
 - PyPI: [https://pypi.org/project/stepRNA/](https://pypi.org/project/stepRNA/)
 - Github: [https://github.com/bmm514/stepRNA/releases](https://github.com/bmm514/stepRNA/releases)  
 
-v1.b0 is the first version released to the public, v1.0.3 is the latest version.  
+v1.b0 is the first version released to the public, v1.0.4 is the latest version.  
 
 stepRNA is licensed under the MIT license.  See [LICENSE](./LICENSE) file for details.
 
@@ -16,6 +16,12 @@ Please report any issues to the stepRNA GitHub page or via email:
 - v.l.hunt@bath.ac.uk (Vicky Hunt)
 
 ## Version Release History
+
+**Version 1.0.4 - 9 Apr, 2021**
+
+- Calcualtion of logodds and Zscores for overlaps
+- Unaligned reads in bowtie alignment removed from BAM output 
+- Full manual still to be added
 
 **Version 1.0.3 - 8 Mar, 2021**
 

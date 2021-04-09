@@ -58,7 +58,7 @@ optional.add_argument('-d', '--directory', default = os.curdir, help='Directory 
 optional.add_argument('-m', '--min_score', default=-1, type=int, help='Minimum score to accept. Default is the shortest read length')
 flags.add_argument('-e', '--remove_exact', action='store_true', help='Remove exact read matches to the reference sequence')
 flags.add_argument('-u', '--make_unique', action='store_true', help='Make FASTA headers unique in reference and reads i.e. >Ref_1 and >Read_1')
-flags.add_argument('-V', '--version', action='version', version='stepRNA v1.0.5', help='Print version number then exit.')
+flags.add_argument('-V', '--version', action='version', version='stepRNA v1.0.4', help='Print version number then exit.')
 
 args = parser.parse_args()
 
