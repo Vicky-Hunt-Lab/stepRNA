@@ -69,12 +69,24 @@ def make_csv(dics, csv_name, headers, logger, show=True):
         if show:
             logger.write('\t'.join(headers))
         for key in keys:
-            if dics[0][key] == None:
-                dics[0][key] = [0,'NA', 'NA']
-            if dics[1][key] == None:
-                dics[1][key] = [0, 'NA', 'NA']
-            fiveprime = dics[1].get(key)
-            threeprime = dics[0].get(key)
+            if dics[0].get(key) == None:
+                threeprime = [0,'NA', 'NA']
+            else:
+                threeprime = dics[0].get(key)
+            if dics[1].get(key) == None:
+                fiveprime = [0, 'NA', 'NA']
+            else:
+                fiveprime = dics[1].get(key)
+#            try:
+#                fiveprime = dics[1].get(key)
+#            except KeyError:
+#                print('KeyError')
+#                fiveprime = [0, 'NA', 'NA']
+#            try:
+#                threeprime = dics[0].get(key)
+#            except KeyError:
+#                print('Key error')
+#                threeprime = [0, 'NA', 'NA']
             writer.writerow([key, fiveprime[0], threeprime[0], fiveprime[1], threeprime[1], fiveprime[2], threeprime[2]])
             if show:
                 logger.write('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(key, fiveprime[0], threeprime[0], fiveprime[1], threeprime[1], fiveprime[2], threeprime[2]))

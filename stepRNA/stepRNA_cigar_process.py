@@ -28,11 +28,8 @@ def main(sorted_bam, filepath):
         refs_read_dic[name] = 0
     MakeBam_dic = defaultdict(lambda:None) 
     all_passed = MakeBam(samfile)
-    reads_processed = 0
 
     for line in samfile:
-        if reads_processed % 10 == 0:
-            print('{} reads processed.'.format(reads_processed))
         if ('D' or 'I') not in line.cigarstring:
             ref_pos = line.get_reference_positions(full_length = True)
             try:
@@ -55,7 +52,6 @@ def main(sorted_bam, filepath):
                 refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
             except Exception:
                 continue
-        reads_processed += 1
     outdir = filepath + '_AlignmentFiles'
     check_dir(outdir)
     for key in MakeBam_dic:
