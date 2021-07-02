@@ -34,7 +34,7 @@ grep -A 1 'Ref_54200' 22G_uncol.fasta
 # Now run make_ref_main.py to generate the spike in datasets
 python3 -m make_ref_main 
 
-
+mkdir spikein_data
 #Generate queries and reference SPIKE-IN files
 cat biological_data/26G_uncol.fasta spikein_data/26G_uncol_Refspike.fasta > spikein_data/26G_uncol_spike.fasta
 cat biological_data/22G_uncol.fasta spikein_data/22G_uncol_Refspike.fasta > spikein_data/22G_uncol_spike.fasta
