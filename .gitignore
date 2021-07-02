@@ -1,3 +1,9 @@
+#My stuff
+*.bt2
+Col_Spike/
+Uncol_Spike/
+Col_NoSpike/
+Uncol_NoSpike/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
