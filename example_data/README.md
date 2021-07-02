@@ -8,10 +8,7 @@
 
 ### Files
 
-The files contained within ```biological_data/``` include:
-- *LF_embryo.fa*; small RNA passengers length filtered to 15-30nt
-- *26G_embryo.fa*; 26G sRNA sequences. Length filtered to 26 starting with a G
-- *22G_embryo.fa*; 22G sRNA sequences. Length filtered to 22 starting with a G
+Biological datasets can be found in [biological_data/](biological_data). These have been downloaded and processed with the following steps.
 
 ### Aquisition and Processing
 
@@ -40,6 +37,7 @@ perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.fa -o 22_embryo.fa -min
 grep '^G' -B 1 26_embryo.fa | sed '/--/d' > biological_data/26G_uncol.fa
 grep '^G' -B 1 22_embryo.fa | sed '/--/d' > biological_data/22G_uncol.fa
 ```
+5) 22G and 26G sequences were also collapsed using, SCRIPTNAME, in [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
 
 ## Simulated Data
 
