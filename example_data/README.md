@@ -24,7 +24,7 @@ tail -n +4 GSM801363-2802.tab > GSM801363_WTembryo.tab
 awk '{print ">" NR; print $0}' GSM801363_WTembryo.tab > GSM801363_rawseqs_WTembryo.fa 
 ```
 
-3) Length filtering was performed with the [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) script, TBr2_length-filter.pl, from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
+3) Length filtering was performed with the [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) script, *TBr2_length-filter.pl*, from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
 
 ```
 perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.fa -o biological_data/Pass_uncol.fa -min 15 -max 30
@@ -37,7 +37,7 @@ perl TBr2_length-filter.pl -i GSM801363_rawseqs_WTembryo.fa -o 22_embryo.fa -min
 grep '^G' -B 1 26_embryo.fa | sed '/--/d' > biological_data/26G_uncol.fa
 grep '^G' -B 1 22_embryo.fa | sed '/--/d' > biological_data/22G_uncol.fa
 ```
-5) 22G and 26G sequences were also collapsed using, SCRIPTNAME, in [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
+5) 22G and 26G sequences were also collapsed using, *TBr2_collapse.pl*, in [NGS TOOLBOX](https://www.smallrnagroup.uni-mainz.de/software/TBr2.zip) from the [small RNA group, Mainz University](https://www.smallrnagroup.uni-mainz.de/)
 
 ## Simulated Data
 
