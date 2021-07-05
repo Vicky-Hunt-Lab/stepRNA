@@ -28,12 +28,12 @@ grep -A 1 'Ref_151559' 26G_uncol.fasta
 grep -A 1 'Ref_54200' 22G_uncol.fasta
 #26G = Ref_151559 ; GTACAAGCGTGCTGGCGTCGAACAGA 
 #22G = Ref_54200 ; GGAAAAGATAACCAGTGTCATT
-#These were added to make_ref_main.py
+#These were added to makeSpike.py
 
 ### Break ###
-# Now run make_ref_main.py to generate the spike in datasets
+# Now run makeSpike.py to generate the spike in datasets
 mkdir spikein_data
-python3 -m make_ref_main 
+python3 -m makeSpike
 
 
 #Generate queries and reference SPIKE-IN files
