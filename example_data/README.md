@@ -8,7 +8,7 @@
 
 ### Files
 
-Biological datasets can be found in [biological_data/](biological_data). These have been downloaded and processed with the following steps.
+Biological datasets can be found in [biological_data](biological_data). These have been downloaded and processed with the following steps.
 
 ### Aquisition and Processing
 
