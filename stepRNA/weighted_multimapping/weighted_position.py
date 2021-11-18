@@ -11,15 +11,17 @@ def process_unique_reads(unique_read_dict):
 def process_fractional_reads(fractional_read_dict):
     '''Process a dictionary of sRNAs with the number of fractionalmapped reads to that part'''
     scores = []
+    reads = []
     for read, read_dict in fractional_read_dict.items():
         score = 0
         for mmap, count in read_dict.items():
             score += count * (1 / mmap)
         scores.append(score)
+        reads.append(read)
     total = sum(scores)
     probabilities = []
     _ = [probabilities.append(score / total) for score in scores]
-    return probabilities
+    return probabilities, reads
 
 def make_weighted_array(probabilities):
     '''From a tuple of probabilities make an array to test a np.random.rand value against'''
@@ -32,7 +34,7 @@ def primary_alignment_block(weighted_array):
     random_number = np.random.rand()
     #print(random_number)
     select_array = random_number < weighted_array
-    return len(select_array) - select_array.sum()
+    return len(select_array) - select_array.sum() - 1
 
 def main_unique(unique_read_dict):
     '''Select a random block to put a read into from a dictionary of unique read counts'''
@@ -43,10 +45,10 @@ def main_unique(unique_read_dict):
 
 def main_fractional(fractional_read_dict):
     '''Select a random block to put a read into from a dictionary of fractional read counts'''
-    probabilities = process_fractional_reads(fractional_read_dict)
+    probabilities, reads = process_fractional_reads(fractional_read_dict)
     weighted_array = make_weighted_array(probabilities)
     block = primary_alignment_block(weighted_array)
-    return block
+    return reads[block]
 
 if __name__ == '__main__':
     unique_read_dict = {
