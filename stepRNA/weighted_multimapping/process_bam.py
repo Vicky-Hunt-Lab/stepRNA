@@ -1,11 +1,15 @@
 import pysam
 
+def check_unmapped(alignment):
+    return (not alignment.is_unmapped) and (('D' and 'I') not in alignment.cigarstring)
+
+
 def make_mmap_dict(bamfile):
     alignmentfile = pysam.AlignmentFile(bamfile)
     multi_dict = {}
     for alignment in alignmentfile:
         #Check to see if mapped and not Insertions or Deletions
-        if not alignment.is_unmapped and ('D' or 'I') not in alignment.cigarstring:
+        if check_unmapped(alignment):
             #Search for duplicates (using best score)
             #Add counts to dictionary for each reference
             alignmentfile, ref_info = get_mapping_info(alignment, alignmentfile)
@@ -43,10 +47,31 @@ def get_mapping_info(alignment, alignmentfile):
 
     ref_names = []
     _ = [ref_names.append(ref_name) for ref_name in names.keys()]
-    if len(ref_names) > 1:
-        print(ref_names)
 
     return alignmentfile, (count, ref_names)
+
+def check_secondary(alignment):
+    return (alignment.is_secondary) and (('D' and 'I') not in alignment.cigarstring)
+
+def get_multimappers(bamfile):
+    alignmentfile = pysam.AlignmentFile(bamfile)
+    ref_names = None 
+    print('Before loop')
+    previous_ref_name = None
+    for alignment in alignmentfile:
+        print('###')
+        print(check_secondary(alignment))
+        print(previous_ref_name)
+        if check_secondary(alignment):
+            ref_names = [previous_ref_name]
+            print(ref_names)
+            while alignment.is_secondary:
+                ref_names.append(alignment.reference_name)
+                alignment = next(alignmentfile)
+            yield ref_names
+        else:
+            previous_ref_name = alignment.reference_name
+            print(previous_ref_name)
 
 def compare_alignments(names, q_name, r_name, alignment_score):
     comparison_score = names[q_name][1]
@@ -59,3 +84,30 @@ def get_alignmentscore(alignment):
     for tag in alignment.tags:
         if 'AS' in tag:
             return tag[1]
+
+def main(bamfile):
+    multi_dict = make_mmap_dict(bamfile)
+    print(multi_dict)
+    a = input()
+    if a is not 'y':
+        raise Exception()
+        return multi_dict
+    multimap_gen = get_multimappers(bamfile)
+    err_count = 0
+    for ref_names in multimap_gen:
+        print(ref_names)
+        fractional_read_dict = {}
+        for ref_name in ref_names:
+            try:
+                fractional_read_dict[ref_name] = multi_dict[ref_name]
+            except KeyError:
+                print(ref_names)
+                err_count += 1
+                print('#############')
+                print(err_count)
+                a = input()
+                if a is not 'y':
+                    raise Exception()
+                    return multi_dict
+
+        yield fractional_read_dict
