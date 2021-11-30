@@ -3,6 +3,8 @@
 from collections import defaultdict
 import json
 import os
+from alive_progress import alive_bar
+from time import sleep
 
 import pysam
 
@@ -19,6 +21,7 @@ def main(sorted_bam, filepath):
     
     Outputs: JSON dictionaries and BAM files for each overhang length'''
     samfile = pysam.AlignmentFile(sorted_bam, 'rb')
+    seekpos = samfile.tell()
     right_dic = defaultdict(lambda:0)
     left_dic = defaultdict(lambda:0)
     type_dic = defaultdict(lambda:0)
@@ -28,30 +31,36 @@ def main(sorted_bam, filepath):
         refs_read_dic[name] = 0
     MakeBam_dic = defaultdict(lambda:None) 
     all_passed = MakeBam(samfile)
+    total_reads = samfile.count()
+    samfile.seek(seekpos)
 
-    for line in samfile:
-        if ('D' or 'I') not in line.cigarstring:
-            ref_pos = line.get_reference_positions(full_length = True)
-            try:
-                right, right_type = right_overhang(samfile, line, ref_pos)
-                left, left_type = left_overhang(samfile, line, ref_pos)
-                #Add to MakeBam
-                def add_to_MakeBam(dic, length, additional, record):
-                    length =  additional + '_' + str(length) 
-                    if dic[length + '_overhang'] == None:
-                        dic[length + '_overhang'] = MakeBam(samfile)
-                    dic.get(length + '_overhang').add_record(record)
-                add_to_MakeBam(MakeBam_dic, right, right_type, line)
-                add_to_MakeBam(MakeBam_dic, left, left_type, line)
-                all_passed.add_record(line)
-                # Create dictionaries to sort information...
-                right_dic[right] += 1 # right overhang count
-                left_dic[left] += 1 # left overhang count
-                type_dic[left_type + '_' + right_type] += 1 # type of overhang count
-                read_len_dic[line.query_length] += 1 # read length count
-                refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
-            except Exception:
-                continue
+    with alive_bar(total_reads) as progbar:
+        for line in samfile:
+            if ('D' or 'I') not in line.cigarstring:
+                ref_pos = line.get_reference_positions(full_length = True)
+                try:
+                    right, right_type = right_overhang(samfile, line, ref_pos)
+                    left, left_type = left_overhang(samfile, line, ref_pos)
+                    #Add to MakeBam
+                    def add_to_MakeBam(dic, length, additional, record):
+                        length =  additional + '_' + str(length) 
+                        if dic[length + '_overhang'] == None:
+                            dic[length + '_overhang'] = MakeBam(samfile)
+                        dic.get(length + '_overhang').add_record(record)
+                    add_to_MakeBam(MakeBam_dic, right, right_type, line)
+                    add_to_MakeBam(MakeBam_dic, left, left_type, line)
+                    all_passed.add_record(line)
+                    # Create dictionaries to sort information...
+                    right_dic[right] += 1 # right overhang count
+                    left_dic[left] += 1 # left overhang count
+                    type_dic[left_type + '_' + right_type] += 1 # type of overhang count
+                    read_len_dic[line.query_length] += 1 # read length count
+                    refs_read_dic[line.reference_name] += 1 # number of reads algining to reference
+                except Exception:
+                    progbar()
+                    continue
+            progbar()
+
     outdir = filepath + '_AlignmentFiles'
     check_dir(outdir)
     for key in MakeBam_dic:
