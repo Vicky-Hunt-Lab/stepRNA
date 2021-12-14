@@ -89,13 +89,21 @@ if args.remove_exact:
 
 #Make unique headers if set...
 if args.make_unique:
-    logger.write('\n##########')
-    logger.write('Making read headers unique...')
-    reads = make_unique.main(reads, 'fasta', name = 'Read')
-    logger.write('Unique read headers complete')
-    logger.write('Making reference headers unique...')
-    ref = make_unique.main(ref, 'fasta', name = 'Ref')
-    logger.write('Unquire reference headers complete')
+    if ref == reads:
+        logger.write('\n##########')
+        logger.write('Reference and reads are the same file so only changing reference')
+        logger.write('Making reference headers unique...')
+        ref = make_unique.main(ref, 'fasta', name = 'Ref')
+        logger.write('Unquire reference headers complete')
+        reads = ref
+    else:
+        logger.write('\n##########')
+        logger.write('Making read headers unique...')
+        reads = make_unique.main(reads, 'fasta', name = 'Read')
+        logger.write('Unique read headers complete')
+        logger.write('Making reference headers unique...')
+        ref = make_unique.main(ref, 'fasta', name = 'Ref')
+        logger.write('Unquire reference headers complete')
     logger.write('Unique FASTA headers made')
 
 

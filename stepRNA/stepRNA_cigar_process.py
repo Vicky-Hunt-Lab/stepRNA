@@ -73,12 +73,13 @@ def main(sorted_bam, filepath):
     left_unique_dic = defaultdict(lambda:0)
     fpath = os.path.join(outdir)
     for f in os.listdir(fpath):
-        if 'passed' not in f:
-            key = int(f.split('_')[-2])
-            if '5prime' in f.split('_')[-3]:
-                left_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
-            if '3prime' in f.split('_')[-3]:
-                right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
+        if '.bai' not in f:
+            if 'passed' not in f:
+                key = int(f.split('_')[-2])
+                if '5prime' in f.split('_')[-3]:
+                    left_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
+                if '3prime' in f.split('_')[-3]:
+                    right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
 
     #Calcualte logodds for right_dic, left_dic, right_unique_dic, left_unique_dic
     right_dic = oddsratio(right_dic)
