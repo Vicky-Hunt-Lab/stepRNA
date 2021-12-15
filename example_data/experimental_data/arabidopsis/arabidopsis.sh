@@ -31,7 +31,11 @@ stepRNA --reference reads/GSM1845210_trim_miRNAfilter_collapsed.fasta \
 	--directory stepRNAoutput/miRNAfilter \
 	--name WT \
 	--make_unique 
+
 # 1186873 aligned
+# 376924 with a 24nt passenger
+# 3' overhang is between 0 and 2 (173325, 142424, 107354)
+# 5' overhang is either side of 0q
 
 ### Repeat for DCL mutant
 
