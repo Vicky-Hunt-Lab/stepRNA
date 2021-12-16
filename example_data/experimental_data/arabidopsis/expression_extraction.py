@@ -20,7 +20,8 @@ def extract_counts(fastafile):
 def extract_expression(bamfile, counts):
     expression = 0
     for line in pysam.AlignmentFile(bamfile):
-        expression += counts[line.query_name]
+        #expression += counts[line.query_name]
+        expression += counts[line.reference_name]
     
     return expression
 

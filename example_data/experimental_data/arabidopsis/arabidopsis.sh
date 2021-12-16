@@ -61,3 +61,5 @@ stepRNA --reference reads/GSM1845222_trim_miRNAfilter_collapsed.fasta \
 	--name DCL \
 	--make_unique 
 # 1113644 aligned
+
+
