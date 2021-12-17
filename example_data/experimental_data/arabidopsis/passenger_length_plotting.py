@@ -86,16 +86,9 @@ if __name__ == '__main__':
     libsize = 8443883
     counts = extract_counts(fastafile)
     passenger_expression_dict = passenger_expression(bamfile, counts, libsize)
-
-
     fastafile2 = 'reads/GSM1845222_trim_miRNAfilter_collapsed.fasta'
     bamfile2 = 'stepRNAoutput/miRNAfilter/DCL_AlignmentFiles/DCL_passed.bam'
     libsize2 = 7252698
     counts2 = extract_counts(fastafile2)
     passenger_expression_dict2 = passenger_expression(bamfile2, counts2, libsize2)
     passenger_expression_plot = plot_passenger_lengths([passenger_expression_dict, passenger_expression_dict2], colors = ['black', 'red'], legend_names = ['WT', 'DCL Mutant'], ylabel = 'Expression (TPM)')
-
-
-
-
-
