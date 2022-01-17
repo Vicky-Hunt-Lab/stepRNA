@@ -1,4 +1,4 @@
-![Optional Text](stepRNAlogo.png)
+![stepRNA](stepRNAlogo.png)
 [![DOI](https://zenodo.org/badge/331932770.svg)](https://zenodo.org/badge/latestdoi/331932770)
 [![PyPI version](https://badge.fury.io/py/stepRNA.svg)](https://badge.fury.io/py/stepRNA)
 
