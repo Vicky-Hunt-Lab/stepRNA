@@ -14,7 +14,7 @@ from stepRNA.general import check_dir
 from stepRNA.output import refs_counts, oddsratio
 import stepRNA.stepRNA_output as make_output
 
-def main(sorted_bam, filepath):
+def main(sorted_bam, filepath, calculate_odds = True):
     '''Process CIGAR strings.
 
     sorted_bam [STR] - path to a sorted BAM file
@@ -82,10 +82,11 @@ def main(sorted_bam, filepath):
                     right_unique_dic[key] = refs_counts(os.path.join(fpath, f), unique = True) 
 
     #Calcualte logodds for right_dic, left_dic, right_unique_dic, left_unique_dic
-    right_dic = oddsratio(right_dic)
-    left_dic = oddsratio(left_dic)
-    right_unique_dic = oddsratio(right_unique_dic)
-    left_unique_dic = oddsratio(left_unique_dic)
+    if calculate_odds:
+        right_dic = oddsratio(right_dic)
+        left_dic = oddsratio(left_dic)
+        right_unique_dic = oddsratio(right_unique_dic)
+        left_unique_dic = oddsratio(left_unique_dic)
 
     return right_dic, left_dic, type_dic, read_len_dic, refs_read_dic, right_unique_dic, left_unique_dic
 
