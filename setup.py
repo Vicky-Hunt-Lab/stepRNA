@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='stepRNA',
-    version='1.0.4',
+    version='1.0.5',
     author='Ben Murcott',
     author_email='bmm41@bath.ac.uk',
     description='Align short RNA seqeuncing reads to determine the length of of overhang.',
