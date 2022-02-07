@@ -23,7 +23,8 @@ setuptools.setup(name='stepRNA',
     install_requires=[
         "pysam>=0.16.0.1",
         "biopython>=1.78",
-        "numpy>=1.19.0"
+        "numpy>=1.19.0",
+        "tqdm>=4.62.3"
         ],
     scripts=["bin/stepRNA",
     "stepRNA/stepRNA_run_bowtie.py",

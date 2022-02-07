@@ -36,7 +36,7 @@ def sam_to_bam(sam_file, logger):
         sys.exit(1)
     return sorted_bam
 
-def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
+def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False, retain_readid = True):
     '''Make unqiue file names for each file in a FASTA/Q file.
     
     seq_file [STR] - path to the Fasta/Fastq file
@@ -47,11 +47,14 @@ def make_unique(seq_file, filetype='fasta', name='Read', keep_ori=False):
     Will output the new file into the input file directory.
 
     Returns: New filepath string'''
-    temp_file = replace_ext(seq_file, '_corrected.fasta')
+    temp_file = replace_ext(seq_file, '_uniqueID.fasta')
     with open(temp_file, 'w') as temp:
         for x, record in enumerate(SeqIO.parse(seq_file, filetype)):
+            if retain_readid:
+                record.description = record.id
+            else:
+                record.description = ''
             record.id = name + '_{}'.format(x + 1) 
-            record.description = ''
             SeqIO.write(record, temp, filetype)
     if keep_ori:
         print('Unique headers made')
@@ -132,7 +135,7 @@ class MakeBam():
             self.length_lst.append(line.header.get_reference_length(line.reference_name))
             self.ind += 1
 
-    def save_to_file(self, filename, filetype = 'bam'):
+    def save_to_file(self, filename, filetype = 'bam', indexbam = True):
         '''Save the information to a file: SAM or BAM. Default = bam'''
         #Forms the new BAM header
         for name, length in zip(self.name_lst, self.length_lst):
@@ -143,3 +146,5 @@ class MakeBam():
                 for line, ind in self.records:
                     line.reference_id = ind 
                     outfile.write(line)
+#            if indexbam:
+#                pysam.index(filename)
