@@ -35,7 +35,7 @@ In order for stepRNA to run you must have:
 ```pip install stepRNA```
 
 
-**To upgrade to v1.0.4**
+**To upgrade to v1.0.5**
 
 ```pip install --upgrade stepRNA```
 
@@ -44,15 +44,15 @@ If this doesn't work due to non-root access issues see **Installing into a Virtu
 
 **To install from source:**
 
-1) Download [stepRNA-1.0.4.tar.gz](https://pypi.org/project/stepRNA/#files)
+1) Download [stepRNA-1.0.5.tar.gz](https://pypi.org/project/stepRNA/#files)
 2) Unzip it
-3) Move into stepRNA-1.0.4 repository
+3) Move into stepRNA-1.0.5 repository
 4) Run the installation
 
 ```
-tar -xvzf stepRNA-1.0.4.tar.gz
+tar -xvzf stepRNA-1.0.5.tar.gz
 
-cd stepRNA-1.0.4
+cd stepRNA-1.0.5
 
 python3 setup.py install
 ```
@@ -106,10 +106,9 @@ See the [MANUAL](URL_LINK) for more information
 
 Latest release notes:
 
-**Version 1.0.4 - 9 Apr, 2021**
+**Version 1.0.5 - 9 Apr, 2021**
 
-- Calcualtion of logodds and Zscores for overlaps
-- Unaligned reads in bowtie alignment removed from BAM output 
+- Progress bar added to cigar processing stage
 - Full manual still to be added
 
 See [NEWS](./NEWS.md) for historical updates of release notes
