@@ -146,5 +146,5 @@ class MakeBam():
                 for line, ind in self.records:
                     line.reference_id = ind 
                     outfile.write(line)
-#            if indexbam:
-#                pysam.index(filename)
+            if indexbam:
+                _ = pysam.index(filename)

@@ -63,3 +63,28 @@ stepRNA --reference reads/GSM1845222_trim_miRNAfilter_collapsed.fasta \
 # 1113644 aligned
 
 
+#Repeat on 24nt sRNAs only, observed to be of interest...
+
+#WT
+perl NGStoolbox/TBr2_length-filter.pl \
+	-i GSM1845210_trim_miRNAfilter_collapsed.fasta \
+	-o GSM1845210_trim_miRNAfilter_24nt_collapsed.fasta \
+	-min 24 -max 24
+
+stepRNA --reference reads/GSM1845210_trim_miRNAfilter_24nt_collapsed.fasta \
+	--reads reads/GSM1845210_trim_miRNAfilter_collapsed.fasta \
+	--min_score 14 \
+	--directory stepRNAoutput/miRNAfilter \
+	--name WT_24nt 
+
+#DCL
+perl NGStoolbox/TBr2_length-filter.pl \
+	-i GSM1845222_trim_miRNAfilter_collapsed.fasta \
+	-o GSM1845222_trim_miRNAfilter_24nt_collapsed.fasta \
+	-min 24 -max 24
+
+stepRNA --reference reads/GSM1845222_trim_miRNAfilter_24nt_collapsed.fasta \
+	--reads reads/GSM1845222_trim_miRNAfilter_collapsed.fasta \
+	--min_score 14 \
+	--directory stepRNAoutput/miRNAfilter \
+	--name DCL_24nt

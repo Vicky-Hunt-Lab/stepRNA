@@ -1,3 +1,5 @@
+from os import path
+
 import pandas
 import matplotlib.pyplot as plt
 import numpy
@@ -70,13 +72,32 @@ def main(overhang_files, overhang_type = None, figfilename = None):
             overhang_type = overhang_type)
     threeoverhang_plot.savefig(figfilename + '_3prime.pdf')
 
-if __name__ == '__main__':
+def run_nofilter_graphs():
+#    #No filter
+    pathtodir = '../../../../stepRNAdata/analysis_2/'
     overhang_files = ['stepRNAoutput/miRNAfilter/WT_overhang.csv','stepRNAoutput/miRNAfilter/DCL_overhang.csv']
+    overhang_files = [path.join(pathtodir, f) for f in overhang_files]
 
-    main(overhang_files, figfilename = 'WT_DCL_both')
-    main(overhang_files, overhang_type = 'overhang', figfilename = 'WT_DCL_overhang')
+    main(overhang_files, figfilename = path.join(pathtodir, 'WT_DCL_both'))
+    main(overhang_files, overhang_type = 'overhang', figfilename = path.join(pathtodir, 'WT_DCL_overhang'))
 
     overhang_files = ['stepRNAoutput/miRNAfilter/WT_unique_overhang.csv','stepRNAoutput/miRNAfilter/DCL_unique_overhang.csv']
+    overhang_files = [path.join(pathtodir, f) for f in overhang_files]
 
-    main(overhang_files, figfilename = 'WT_DCL_unique_both')
-    main(overhang_files, overhang_type = 'overhang', figfilename = 'WT_DCL_unique_overhang')
+    main(overhang_files, figfilename = path.join(pathtodir, 'WT_DCL_unique_both'))
+    main(overhang_files, overhang_type = 'overhang', figfilename = path.join(pathtodir, 'WT_DCL_unique_overhang'))
+
+    #24nt filter
+def run_24ntfilter_graphs():
+    pathtodir = '../../../../stepRNAdata/analysis_2/'
+    overhang_files = ['stepRNAoutput/miRNAfilter/WT_24nt_overhang.csv','stepRNAoutput/miRNAfilter/DCL_24nt_overhang.csv']
+    overhang_files = [path.join(pathtodir, f) for f in overhang_files]
+
+    main(overhang_files, figfilename = path.join(pathtodir, 'WT_DCL_both_24nt'))
+    main(overhang_files, overhang_type = 'overhang', figfilename = path.join(pathtodir, 'WT_DCL_overhang_24nt'))
+
+    overhang_files = ['stepRNAoutput/miRNAfilter/WT_24nt_unique_overhang.csv','stepRNAoutput/miRNAfilter/DCL_24nt_unique_overhang.csv']
+    overhang_files = [path.join(pathtodir, f) for f in overhang_files]
+
+    main(overhang_files, figfilename = path.join(pathtodir, 'WT_DCL_unique_both_24nt'))
+    main(overhang_files, overhang_type = 'overhang', figfilename = path.join(pathtodir, 'WT_DCL_unique_overhang_24nt'))

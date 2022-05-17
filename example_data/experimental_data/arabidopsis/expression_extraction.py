@@ -41,7 +41,8 @@ def make_expressions_dict(fastafile, bamfiles, libsize):
 
     return expressions
 
-def plot_overhangs(expressions_dicts, colors, legend_names = [], width = 0.35, N = None):
+def plot_overhangs(expressions_dicts, colors, legend_names = [], width = 0.35, N = None,
+        xlabel = '3\' overhang length', ylabel = 'Expression (RPM)'):
     fig, ax = plt.subplots()
     if N is None:
         N = len(expressions_dicts[0].keys())
@@ -64,8 +65,8 @@ def plot_overhangs(expressions_dicts, colors, legend_names = [], width = 0.35, N
     ax.set_xticks(ind + width / (i+1) )
     ax.set_xticklabels(x)
 
-    plt.xlabel('3\' overhang length')
-    plt.ylabel('Expression (RPM)')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
 
     return fig
 
@@ -79,38 +80,64 @@ def main(inputfiles):
 
 
 
-if __name__ == '__main__':
-    #argparse shit
+#if __name__ == '__main__':
+    #argparse options
 
     #Only do with either 3' or 5' currently!!!
-    fastafile_WT = 'reads/GSM1845210_trim_miRNAfilter_collapsed.fasta'
-    bamfiles_WT = glob.glob('stepRNAoutput/miRNAfilter/WT_AlignmentFiles/*3prime*.bam')
+def run_nofilter_graphs():
+    pathtodir = '../../../../stepRNAdata/analysis_2/'
+    fastafile_WT = path.join(pathtodir, 'reads/GSM1845210_trim_miRNAfilter_collapsed.fasta')
+    bamfiles_WT = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/WT_AlignmentFiles/*3prime*.bam'))
     libsize_WT = 8443883
-    fastafile_DCL = 'reads/GSM1845222_trim_miRNAfilter_collapsed.fasta'
-    bamfiles_DCL = glob.glob('stepRNAoutput/miRNAfilter/DCL_AlignmentFiles/*3prime*.bam')
+    fastafile_DCL = path.join(pathtodir, 'reads/GSM1845222_trim_miRNAfilter_collapsed.fasta')
+    bamfiles_DCL = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/DCL_AlignmentFiles/*3prime*.bam'))
     libsize_DCL = 7252698
-    
+
     inputfiles = [(fastafile_WT, bamfiles_WT, libsize_WT), (fastafile_DCL, bamfiles_DCL, libsize_DCL)]
     expressions_dicts = main(inputfiles)
-    
+
     overhang_plot = plot_overhangs(expressions_dicts, ['black', 'red'], legend_names = ['WT', 'DCL Mutant'])
-    overhang_plot.savefig('WT_DCL_expression.pdf')
-    
+    overhang_plot.savefig(path.join(pathtodir, 'WT_DCL_3prime_expression.svg'))
 
+    #Only do with either 3' or 5' currently!!!
+    fastafile_WT = path.join(pathtodir, 'reads/GSM1845210_trim_miRNAfilter_collapsed.fasta')
+    bamfiles_WT = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/WT_AlignmentFiles/*5prime*.bam'))
+    libsize_WT = 8443883
+    fastafile_DCL = path.join(pathtodir, 'reads/GSM1845222_trim_miRNAfilter_collapsed.fasta')
+    bamfiles_DCL = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/DCL_AlignmentFiles/*5prime*.bam'))
+    libsize_DCL = 7252698
 
+    inputfiles = [(fastafile_WT, bamfiles_WT, libsize_WT), (fastafile_DCL, bamfiles_DCL, libsize_DCL)]
+    expressions_dicts = main(inputfiles)
 
+    overhang_plot = plot_overhangs(expressions_dicts, ['black', 'red'], legend_names = ['WT', 'DCL Mutant'], xlabel = '5\' overhang length')
+    overhang_plot.savefig(path.join(pathtodir, 'WT_DCL_5prime_expression.svg'))
 
-def plotting_lists(expressions):
-    x = []
-    y = []
-    p = []
-    for length, count in expressions.items():
-        l = int(length.split('_')[-1])
-        p.append((l, count))
-        p.sort()
+def run_24ntfilter_graphs():
+    pathtodir = '../../../../stepRNAdata/analysis_2/'
+    fastafile_WT = path.join(pathtodir, 'reads/GSM1845210_trim_miRNAfilter_24nt_collapsed.fasta')
+    bamfiles_WT = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/WT_24nt_AlignmentFiles/*3prime*.bam'))
+    libsize_WT = 8443883
+    fastafile_DCL = path.join(pathtodir, 'reads/GSM1845222_trim_miRNAfilter_24nt_collapsed.fasta')
+    bamfiles_DCL = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/DCL_24nt_AlignmentFiles/*3prime*.bam'))
+    libsize_DCL = 7252698
 
-    for l, count in p:
-        x.append(l)
-        y.append(count)
+    inputfiles = [(fastafile_WT, bamfiles_WT, libsize_WT), (fastafile_DCL, bamfiles_DCL, libsize_DCL)]
+    expressions_dicts = main(inputfiles)
 
-    return x, y
+    overhang_plot = plot_overhangs(expressions_dicts, ['black', 'red'], legend_names = ['WT', 'DCL Mutant'])
+    overhang_plot.savefig(path.join(pathtodir, 'WT_DCL_24nt_3prime_expression.svg'))
+
+    #Only do with either 3' or 5' currently!!!
+    fastafile_WT = path.join(pathtodir, 'reads/GSM1845210_trim_miRNAfilter_24nt_collapsed.fasta')
+    bamfiles_WT = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/WT_24nt_AlignmentFiles/*5prime*.bam'))
+    libsize_WT = 8443883
+    fastafile_DCL = path.join(pathtodir, 'reads/GSM1845222_trim_miRNAfilter_24nt_collapsed.fasta')
+    bamfiles_DCL = glob.glob(path.join(pathtodir, 'stepRNAoutput/miRNAfilter/DCL_24nt_AlignmentFiles/*5prime*.bam'))
+    libsize_DCL = 7252698
+
+    inputfiles = [(fastafile_WT, bamfiles_WT, libsize_WT), (fastafile_DCL, bamfiles_DCL, libsize_DCL)]
+    expressions_dicts = main(inputfiles)
+
+    overhang_plot = plot_overhangs(expressions_dicts, ['black', 'red'], legend_names = ['WT', 'DCL Mutant'], xlabel = '5\' overhang length')
+    overhang_plot.savefig(path.join(pathtodir, 'WT_DCL_24nt_5prime_expression.svg'))

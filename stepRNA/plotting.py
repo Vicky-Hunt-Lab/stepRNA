@@ -22,7 +22,7 @@ def process_overhang_csv(overhang_csv, end = 'five', library_size = None, add_ov
         return xvals, yvals
 
     with open(add_overhang_csv) as csvin:
-        print('addtiional')
+        print('#'*10)
         csvreader = csv.reader(csvin)
         header_info = next(csvreader)
         add_xvals, add_yvals = process_lines(csvreader, end_col, add_library_size)
@@ -47,6 +47,7 @@ def process_lines(csvreader, end_col, library_size = None):
 
 def normalise(count, library_size):
     scaling_factor = library_size / 1000000
+    print(count / scaling_factor)
     return count / scaling_factor
 
 def make_plot(xvals, yvals, figname, width):
