@@ -18,7 +18,7 @@ stepRNA is a RNA-seq read processor, based on bowtie2, that will align small RNA
 ## Reporting Issues
 
 Please report any issues to the stepRNA GitHub page or via email:
-- https://github.com/bmm514/stepRNA/issues
+- https://github.com/Vicky-Hunt-Lab/stepRNA/issues
 - benmurcott96@gmail.com or bmm41@bath.ac.uk (Ben Murcott)
 - v.l.hunt@bath.ac.uk (Vicky Hunt)
 
