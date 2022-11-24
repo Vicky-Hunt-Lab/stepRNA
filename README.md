@@ -125,4 +125,4 @@ For more information:
 
 If you use stepRNA in your work please cite:
 
-[stepRNA: identification of Dicer-processing signatures and passenger strand lengths in small RNA (Murcott, Pawluk & Hunt, 2021)](URL_LINK)
+[stepRNA: Identification of Dicer cleavage signatures and passenger strand lengths in small RNA sequences (Murcott *et al.* 2022)](https://doi.org/10.3389/fbinf.2022.994871)
