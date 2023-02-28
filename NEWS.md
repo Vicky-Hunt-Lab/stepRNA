@@ -17,7 +17,7 @@ Please report any issues to the stepRNA GitHub page or via email:
 
 ## Version Release History
 
-**Version 1.0.6 - 7 Feb, 2022**
+**Version 1.0.6 - 28 Feb, 2023**
 
 - Update to setup.py to include alive_progress
 

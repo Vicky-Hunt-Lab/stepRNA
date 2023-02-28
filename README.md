@@ -106,7 +106,7 @@ See the [MANUAL](URL_LINK) for more information
 
 Latest release notes:
 
-**Version 1.0.6 - 7 Feb, 2022**
+**Version 1.0.6 -  28 Feb, 2023**
 
 - Update to setup.py to include alive_progress
 
