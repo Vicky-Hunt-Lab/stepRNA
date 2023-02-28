@@ -35,7 +35,7 @@ In order for stepRNA to run you must have:
 ```pip install stepRNA```
 
 
-**To upgrade to v1.0.5**
+**To upgrade to v1.0.6**
 
 ```pip install --upgrade stepRNA```
 
@@ -44,15 +44,15 @@ If this doesn't work due to non-root access issues see **Installing into a Virtu
 
 **To install from source:**
 
-1) Download [stepRNA-1.0.5.tar.gz](https://pypi.org/project/stepRNA/#files)
+1) Download [stepRNA-1.0.6.tar.gz](https://pypi.org/project/stepRNA/#files)
 2) Unzip it
-3) Move into stepRNA-1.0.5 repository
+3) Move into stepRNA-1.0.6 repository
 4) Run the installation
 
 ```
-tar -xvzf stepRNA-1.0.5.tar.gz
+tar -xvzf stepRNA-1.0.6.tar.gz
 
-cd stepRNA-1.0.5
+cd stepRNA-1.0.6
 
 python3 setup.py install
 ```
