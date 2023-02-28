@@ -106,10 +106,9 @@ See the [MANUAL](URL_LINK) for more information
 
 Latest release notes:
 
-**Version 1.0.5 - 9 Apr, 2021**
+**Version 1.0.6 - 7 Feb, 2022**
 
-- Progress bar added to cigar processing stage
-- Full manual still to be added
+- Update to setup.py to include alive_progress
 
 See [NEWS](./NEWS.md) for historical updates of release notes
 

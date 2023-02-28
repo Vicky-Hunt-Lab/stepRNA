@@ -4,7 +4,7 @@ stepRNA is available for download at:
 - PyPI: [https://pypi.org/project/stepRNA/](https://pypi.org/project/stepRNA/)
 - Github: [https://github.com/bmm514/stepRNA/releases](https://github.com/bmm514/stepRNA/releases)  
 
-v1.b0 is the first version released to the public, v1.0.5 is the latest version.  
+v1.b0 is the first version released to the public, v1.0.6 is the latest version.  
 
 stepRNA is licensed under the MIT license.  See [LICENSE](./LICENSE) file for details.
 
@@ -16,6 +16,10 @@ Please report any issues to the stepRNA GitHub page or via email:
 - v.l.hunt@bath.ac.uk (Vicky Hunt)
 
 ## Version Release History
+
+**Version 1.0.6 - 7 Feb, 2022**
+
+- Update to setup.py to include alive_progress
 
 **Version 1.0.5 - 7 Feb, 2022**
 
